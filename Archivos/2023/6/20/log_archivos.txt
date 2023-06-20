@@ -1,0 +1,4 @@
+20/6/2023 11:57:52 - Input - Inicio Sesion - Usuario: 1
+20/6/2023 11:57:52 - Output - Inicio Sesion - Inicio de sesion Exitoso
+20/6/2023 11:59:11 - Input - Inicio Sesion - Usuario: 1
+20/6/2023 11:59:11 - Output - Inicio Sesion - Inicio de sesion Exitoso
