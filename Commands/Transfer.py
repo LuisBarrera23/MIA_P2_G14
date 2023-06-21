@@ -12,7 +12,7 @@ class Transfer():
     def Local(self):
         if str(self.mode).lower() !=  str(self.instancia.type).lower():
             print("El modo seleccionado no es igual al de la configuración.")
-            self.instancia.escribirBitacora(f"Output - Transfer - El modo seleccionado no es igual al de la configuración.")
+             
             self.instancia.consola += "El modo seleccionado no es igual al de la configuración.\n"
             return
         ruta_directorio = os.path.join('Archivos', self.pfrom)
@@ -26,7 +26,7 @@ class Transfer():
         # Validar la existencia del origen (ruta_directorio)
         if not os.path.exists(ruta_directorio):
             print(f"Error: El archivo o carpeta '{ruta_directorio}' no existe.")
-            self.instancia.escribirBitacora(f"Output - Transfer - Error: El archivo o carpeta '{ruta_directorio}' no existe.")
+             
             self.instancia.consola += f"Error: El archivo o carpeta '{ruta_directorio}' no existe.\n"
             return
 
@@ -119,14 +119,13 @@ class Transfer():
                 new_file = base_name + "_1" + extension
                 destination_file = os.path.join(ruta_destino, new_file)
                 print(f"Advertencia: El archivo '{file_name}' ya existe en el destino. Se guardará como '{new_file}'.")
-                self.instancia.escribirBitacora(f"Output - Transfer - Advertencia: El archivo '{file_name}' ya existe en el destino. Se guardará como '{new_file}'.")
+                 
                 self.instancia.consola += f"Advertencia: El archivo '{file_name}' ya existe en el destino. Se guardará como '{new_file}'.\n"
             shutil.move(ruta_directorio, destination_file)
 
         print("Transferencia completada.")
-        self.instancia.escribirBitacora(f"Output - Transfer - Transferencia completada.")
+         
         self.instancia.consola += "Transferencia completada.\n"
-        self.instancia.cLocal+=1
     
     def Cloud(self):
         pass

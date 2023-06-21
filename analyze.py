@@ -60,7 +60,6 @@ class Analyze():
                         self.Exec(self.lines[i])
                     else:
                         self.instancia.consola += "Error, se debe usar el comando 'configure' o 'exec' de primero.\n"
-                        self.instancia.escribirBitacora(f"Output - Analizador - Error, se debe usar el comando 'configure' o 'exec' de primero.")
                         print("Error, se debe usar el comando 'configure' o 'exec' de primero.")
                         return
                 elif str(command[0]).lower() == "create":
@@ -82,7 +81,6 @@ class Analyze():
             else:
                 print(f"Este comando no existe: {command[0]}")
                 self.instancia.consola += f"Este comando no existe: {command[0]}\n"
-                self.instancia.escribirBitacora(f"Output - Analizador - Este comando no existe: {command[0]}")
                 continue
    
     
@@ -96,7 +94,6 @@ class Analyze():
         if len(current) < 4 or len(current) > 4:
             print("Error, la cantidad de parámetros es incorrecta.")
             self.instancia.consola += "Error, la cantidad de parámetros es incorrecta.\n"
-            self.instancia.escribirBitacora(f"Output - Analizador - Error, la cantidad de parámetros es incorrecta.")
             return
         
         for i in range(1,len(current)):
@@ -104,7 +101,6 @@ class Analyze():
             if len(parametro) != 2:
                 print("Error con los parámetros de: create.")
                 self.instancia.consola += "Error con los parámetros de: create.\n"
-                self.instancia.escribirBitacora(f"Output - Analizador - Error con los parámetros de: create.")
                 return
             
             if str(parametro[0]).lower() == "name":
@@ -118,7 +114,6 @@ class Analyze():
                     else:
                         print('Error, el nombre del archivo tiene espacios en blanco y no está dentro de "".')
                         self.instancia.consola += 'Error, el nombre del archivo tiene espacios en blanco y no está dentro de "".\n'
-                        self.instancia.escribirBitacora(f'Output - Analizador - Error, el nombre del archivo tiene espacios en blanco y no está dentro de "".')
                         return  
                 else:
                     # Verificar si hay comillas dobles al principio y al final
@@ -133,7 +128,6 @@ class Analyze():
                 else:
                     print('Error, el body del archivo no está dentro de "".')
                     self.instancia.consola += 'Error, el body del archivo no está dentro de "".\n'
-                    self.instancia.escribirBitacora(f'Output - Analizador - Error, el body del archivo no está dentro de "".')
                     return  
             elif str(parametro[0]).lower() == "path":
                 parametro[1] = str(parametro[1]).strip()
@@ -152,7 +146,7 @@ class Analyze():
                                 newPath += "/"
                             else:
                                 print('Error, la ruta del archivo tiene espacios en blanco y no está dentro de "".')
-                                self.instancia.escribirBitacora(f'Output - Analizador - Error, la ruta del archivo tiene espacios en blanco y no está dentro de "".')
+                                 
                                 self.instancia.consola += 'Error, la ruta del archivo tiene espacios en blanco y no está dentro de "".\n'
                                 return  
                         else:
@@ -170,7 +164,7 @@ class Analyze():
                 path = parametro[1]
             else:
                 print(f"Error, este parámetro no existe: {parametro[0]}.")
-                self.instancia.escribirBitacora(f'Output - Analizador - Error, este parámetro no existe: {parametro[0]}.')
+                 
                 self.instancia.consola += f"Error, este parámetro no existe: {parametro[0]}.\n"
                 return
         
@@ -182,7 +176,7 @@ class Analyze():
                 create.Cloud()
         else:
             print("Error con los parámetros obligatorios del comando: Create")
-            self.instancia.escribirBitacora(f'Output - Analizador - Error con los parámetros obligatorios del comando: Create')
+             
             self.instancia.consola += "Error con los parámetros obligatorios del comando: Create\n"
             return
  
@@ -193,7 +187,7 @@ class Analyze():
         current = command.split(" -")
         if len(current) < 2 or len(current) > 3:
             print("Error, la cantidad de parámetros es incorrecta.")
-            self.instancia.escribirBitacora(f'Output - Analizador - Error, la cantidad de parámetros es incorrecta.')
+             
             self.instancia.consola += "Error, la cantidad de parámetros es incorrecta.\n"
             return
         
@@ -201,7 +195,7 @@ class Analyze():
             parametro = current[i].split("->")
             if len(parametro) != 2:
                 print("Error con los parámetros de: delete.")
-                self.instancia.escribirBitacora(f'Output - Analizador - Error con los parámetros de: delete.')
+                 
                 self.instancia.consola += "Error con los parámetros de: delete.\n"
                 return
             
@@ -215,7 +209,7 @@ class Analyze():
                         parametro[1] = parametro[1][1:-1].strip()
                     else:
                         print('Error, el nombre del archivo tiene espacios en blanco y no está dentro de "".')
-                        self.instancia.escribirBitacora(f'Output - Analizador - Error, el nombre del archivo tiene espacios en blanco y no está dentro de "".')
+                         
                         self.instancia.consola += 'Error, el nombre del archivo tiene espacios en blanco y no está dentro de "".\n'
                         return  
                 else:
@@ -241,7 +235,7 @@ class Analyze():
                                 newPath += "/"
                             else:
                                 print('Error, la ruta del archivo tiene espacios en blanco y no está dentro de "".')
-                                self.instancia.escribirBitacora(f'Output - Analizador - Error, la ruta del archivo tiene espacios en blanco y no está dentro de "".')
+                                 
                                 self.instancia.consola += 'Error, la ruta del archivo tiene espacios en blanco y no está dentro de "".\n'
                                 return
                         else:
@@ -258,12 +252,12 @@ class Analyze():
                 path = parametro[1]
             else:
                 print(f"Error, este parámetro no existe: {parametro[0]}.")
-                self.instancia.escribirBitacora(f'Output - Analizador - Error, este parámetro no existe: {parametro[0]}.')
+                 
                 self.instancia.consola += f"Error, este parámetro no existe: {parametro[0]}.\n"
                 return
         
         if path is not None:
-            self.instancia.escribirBitacora(f"Input - Delete - path:{path} | name:{name}")
+             
             respuesta = messagebox.askquestion("Eliminar archivo", f"¿Deseas eliminar el archivo {name}?")
             if respuesta == "yes":
                 delete = Delete(path, name)
@@ -273,7 +267,7 @@ class Analyze():
                     delete.Cloud()
         else:
             print("Error con los parámetros obligatorios del comando: Delete")
-            self.instancia.escribirBitacora(f'Output - Analizador - Error con los parámetros obligatorios del comando: Delete')
+             
             self.instancia.consola += "Error con los parámetros obligatorios del comando: Delete\n"
             return
  
@@ -284,7 +278,7 @@ class Analyze():
         current = command.split(" -")
         if len(current) < 3 or len(current) > 3:
             print("Error, la cantidad de parámetros es incorrecta.")
-            self.instancia.escribirBitacora(f'Output - Analizador - Error, la cantidad de parámetros es incorrecta.')
+             
             self.instancia.consola += "Error, la cantidad de parámetros es incorrecta.\n"
             return
         
@@ -292,7 +286,7 @@ class Analyze():
             parametro = current[i].split("->")
             if len(parametro) != 2:
                 print("Error con los parámetros de: copy.")
-                self.instancia.escribirBitacora(f'Output - Analizador - Error con los parámetros de: copy.')
+                 
                 self.instancia.consola += "Error con los parámetros de: copy.\n"
                 return
             
@@ -313,7 +307,7 @@ class Analyze():
                                 newPath += "/"
                             else:
                                 print('Error, la ruta del archivo tiene espacios en blanco y no está dentro de "".')
-                                self.instancia.escribirBitacora(f'Output - Analizador - Error, la ruta del archivo tiene espacios en blanco y no está dentro de "".')
+                                 
                                 self.instancia.consola += 'Error, la ruta del archivo tiene espacios en blanco y no está dentro de "".\n'
                                 return
                         else:
@@ -345,7 +339,7 @@ class Analyze():
                                 newPath += "/"
                             else:
                                 print('Error, la ruta del archivo tiene espacios en blanco y no está dentro de "".')
-                                self.instancia.escribirBitacora(f'Output - Analizador - Error, la ruta del archivo tiene espacios en blanco y no está dentro de "".')
+                                 
                                 self.instancia.consola += 'Error, la ruta del archivo tiene espacios en blanco y no está dentro de "".\n'
                                 return
                         else:
@@ -362,7 +356,7 @@ class Analyze():
                 pto = parametro[1]
             else:
                 print(f"Error, este parámetro no existe: {parametro[0]}.")
-                self.instancia.escribirBitacora(f'Output - Analizador - Error, este parámetro no existe: {parametro[0]}.s')
+                 
                 self.instancia.consola += f"Error, este parámetro no existe: {parametro[0]}.\n"
                 return
         
@@ -374,7 +368,7 @@ class Analyze():
                 copy.Cloud()
         else:
             print("Error con los parámetros obligatorios del comando: Copy")
-            self.instancia.escribirBitacora(f'Output - Analizador - Error con los parámetros obligatorios del comando: Copy')
+             
             self.instancia.consola += "Error con los parámetros obligatorios del comando: Copy\n"
             return
  
@@ -386,7 +380,7 @@ class Analyze():
         current = command.split(" -")
         if len(current) < 4 or len(current) > 4:
             print("Error, la cantidad de parámetros es incorrecta.")
-            self.instancia.escribirBitacora(f'Output - Analizador - Error, la cantidad de parámetros es incorrecta.')
+             
             self.instancia.consola += "Error, la cantidad de parámetros es incorrecta.\n"
             return
         
@@ -394,7 +388,7 @@ class Analyze():
             parametro = current[i].split("->")
             if len(parametro) != 2:
                 print("Error con los parámetros de: transfer.")
-                self.instancia.escribirBitacora(f'Output - Analizador - Error con los parámetros de: transfer.')
+                 
                 self.instancia.consola += "Error con los parámetros de: transfer.\n"
                 return
             
@@ -415,7 +409,7 @@ class Analyze():
                                 newPath += "/"
                             else:
                                 print('Error, la ruta del archivo tiene espacios en blanco y no está dentro de "".')
-                                self.instancia.escribirBitacora(f'Output - Analizador - Error, la ruta del archivo tiene espacios en blanco y no está dentro de "".')
+                                 
                                 self.instancia.consola += 'Error, la ruta del archivo tiene espacios en blanco y no está dentro de "".\n'
                                 return
                         else:
@@ -447,7 +441,7 @@ class Analyze():
                                 newPath += "/"
                             else:
                                 print('Error, la ruta del archivo tiene espacios en blanco y no está dentro de "".')
-                                self.instancia.escribirBitacora(f'Output - Analizador - Error, la ruta del archivo tiene espacios en blanco y no está dentro de "".')
+                                 
                                 self.instancia.consola += 'Error, la ruta del archivo tiene espacios en blanco y no está dentro de "".\n'
                                 return
                         else:
@@ -470,7 +464,7 @@ class Analyze():
                     mode = str(parametro[1]).lower()
             else:
                 print(f"Error, este parámetro no existe: {parametro[0]}.")
-                self.instancia.escribirBitacora(f'Output - Analizador - Error, este parámetro no existe: {parametro[0]}.')
+                 
                 self.instancia.consola += "Error, este parámetro no existe: {parametro[0]}.\n"
                 return
         
@@ -483,7 +477,7 @@ class Analyze():
             
         else:
             print("Error con los parámetros obligatorios del comando: Transfer")
-            self.instancia.escribirBitacora(f'Output - Analizador - Error con los parámetros obligatorios del comando: Transfer')
+             
             self.instancia.consola += "Error con los parámetros obligatorios del comando: Transfer\n"
             return
       
@@ -494,7 +488,7 @@ class Analyze():
         current = command.split(" -")
         if len(current) < 3 or len(current) > 3:
             print("Error, la cantidad de parámetros es incorrecta.")
-            self.instancia.escribirBitacora(f'Output - Analizador - Error, la cantidad de parámetros es incorrecta.')
+             
             self.instancia.consola += "Error, la cantidad de parámetros es incorrecta.\n"
             return
         
@@ -502,7 +496,7 @@ class Analyze():
             parametro = current[i].split("->")
             if len(parametro) != 2:
                 print("Error con los parámetros de: rename.")
-                self.instancia.escribirBitacora(f'Output - Analizador - Error con los parámetros de: rename.')
+                 
                 self.instancia.consola += "Error con los parámetros de: rename.\n"
                 return
             
@@ -516,7 +510,7 @@ class Analyze():
                         parametro[1] = parametro[1][1:-1].strip()
                     else:
                         print('Error, el nombre del archivo tiene espacios en blanco y no está dentro de "".')
-                        self.instancia.escribirBitacora(f'Output - Analizador - Error, el nombre del archivo tiene espacios en blanco y no está dentro de "".')
+                         
                         self.instancia.consola += 'Error, el nombre del archivo tiene espacios en blanco y no está dentro de "".\n'
                         return  
                 else:
@@ -542,7 +536,7 @@ class Analyze():
                                 newPath += "/"
                             else:
                                 print('Error, la ruta del archivo tiene espacios en blanco y no está dentro de "".')
-                                self.instancia.escribirBitacora(f'Output - Analizador - Error, la ruta del archivo tiene espacios en blanco y no está dentro de "".')
+                                 
                                 self.instancia.consola += 'Error, la ruta del archivo tiene espacios en blanco y no está dentro de "".\n'
                                 return
                         else:
@@ -559,7 +553,7 @@ class Analyze():
                 path = parametro[1]
             else:
                 print(f"Error, este parámetro no existe: {parametro[0]}.")
-                self.instancia.escribirBitacora(f'Output - Analizador - Error, este parámetro no existe: {parametro[0]}.')
+                 
                 self.instancia.consola += f"Error, este parámetro no existe: {parametro[0]}.\n"
                 return
         
@@ -572,7 +566,7 @@ class Analyze():
             
         else:
             print("Error con los parámetros obligatorios del comando: Rename")
-            self.instancia.escribirBitacora(f'Output - Analizador - Error con los parámetros obligatorios del comando: Rename')
+             
             self.instancia.consola += "Error con los parámetros obligatorios del comando: Rename\n"
             return
          
@@ -583,7 +577,7 @@ class Analyze():
         current = command.split(" -")
         if len(current) < 3 or len(current) > 3:
             print("Error, la cantidad de parámetros es incorrecta.")
-            self.instancia.escribirBitacora(f'Output - Analizador - Error, la cantidad de parámetros es incorrecta.')
+             
             self.instancia.consola += "Error, la cantidad de parámetros es incorrecta.\n"
             return
         
@@ -591,7 +585,7 @@ class Analyze():
             parametro = current[i].split("->")
             if len(parametro) != 2:
                 print("Error con los parámetros de: modify.")
-                self.instancia.escribirBitacora(f'Output - Analizador - Error con los parámetros de: modify.')
+                 
                 self.instancia.consola += "Error con los parámetros de: modify.\n"
                 return
             
@@ -601,7 +595,7 @@ class Analyze():
                     body = parametro[1][1:-1]
                 else:
                     print('Error, el body del archivo no está dentro de "".')
-                    self.instancia.escribirBitacora(f'Output - Analizador - Error, el body del archivo no está dentro de "".')
+                     
                     self.instancia.consola += 'Error, el body del archivo no está dentro de "".\n'
                     return  
             elif str(parametro[0]).lower() == "path":
@@ -621,7 +615,7 @@ class Analyze():
                                 newPath += "/"
                             else:
                                 print('Error, la ruta del archivo tiene espacios en blanco y no está dentro de "".')
-                                self.instancia.escribirBitacora(f'Output - Analizador - Error, la ruta del archivo tiene espacios en blanco y no está dentro de "".')
+                                 
                                 self.instancia.consola += 'Error, la ruta del archivo tiene espacios en blanco y no está dentro de "".\n'
                                 return
                         else:
@@ -638,7 +632,7 @@ class Analyze():
                 path = parametro[1]
             else:
                 print(f"Error, este parámetro no existe: {parametro[0]}.")
-                self.instancia.escribirBitacora(f'Output - Analizador - Error, este parámetro no existe: {parametro[0]}.')
+                 
                 self.instancia.consola += f"Error, este parámetro no existe: {parametro[0]}.\n"
                 return
         
@@ -651,7 +645,7 @@ class Analyze():
             
         else:
             print("Error con los parámetros obligatorios del comando: Modify")
-            self.instancia.escribirBitacora(f'Output - Analizador - Error con los parámetros obligatorios del comando: Modify')
+             
             self.instancia.consola += "Error con los parámetros obligatorios del comando: Modify\n"
             return
      
@@ -662,7 +656,7 @@ class Analyze():
         current = command.split(" -")
         if len(current) < 3 or len(current) > 3:
             print("Error, la cantidad de parámetros es incorrecta.")
-            self.instancia.escribirBitacora(f'Output - Analizador - Error, la cantidad de parámetros es incorrecta.')
+             
             self.instancia.consola += "Error, la cantidad de parámetros es incorrecta.\n"
             return
         
@@ -670,7 +664,7 @@ class Analyze():
             parametro = current[i].split("->")
             if len(parametro) != 2:
                 print("Error con los parámetros de: add.")
-                self.instancia.escribirBitacora(f'Output - Analizador - Error con los parámetros de: add.')
+                 
                 self.instancia.consola += "Error con los parámetros de: add.\n"
                 return
             
@@ -680,7 +674,7 @@ class Analyze():
                     body = parametro[1][1:-1]
                 else:
                     print('Error, el body del archivo no está dentro de "".')
-                    self.instancia.escribirBitacora(f'Output - Analizador - Error, el body del archivo no está dentro de "".')
+                     
                     self.instancia.consola += 'Error, el body del archivo no está dentro de "".\n'
                     return  
             elif str(parametro[0]).lower() == "path":
@@ -700,7 +694,7 @@ class Analyze():
                                 newPath += "/"
                             else:
                                 print('Error, la ruta del archivo tiene espacios en blanco y no está dentro de "".')
-                                self.instancia.escribirBitacora(f'Output - Analizador - Error, la ruta del archivo tiene espacios en blanco y no está dentro de "".')
+                                 
                                 self.instancia.consola += 'Error, la ruta del archivo tiene espacios en blanco y no está dentro de "".\n'
                                 return
                         else:
@@ -717,7 +711,7 @@ class Analyze():
                 path = parametro[1]
             else:
                 print(f"Error, este parámetro no existe: {parametro[0]}.")
-                self.instancia.escribirBitacora(f'Output - Analizador - Error, este parámetro no existe: {parametro[0]}.')
+                 
                 self.instancia.consola += f"Error, este parámetro no existe: {parametro[0]}.\n"
                 return
         
@@ -730,7 +724,7 @@ class Analyze():
             
         else:
             print("Error con los parámetros obligatorios del comando: Add")
-            self.instancia.escribirBitacora(f'Output - Analizador - Error con los parámetros obligatorios del comando: Add')
+             
             self.instancia.consola += "Error con los parámetros obligatorios del comando: Add\n"
             return
          

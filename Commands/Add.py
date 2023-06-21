@@ -16,7 +16,7 @@ class Add():
         if not os.path.exists(ruta_directorio):
             print("Error: La ruta o el archivo no existen.")
             self.instancia.consola += "Error: La ruta o el archivo no existen.\n"
-            self.instancia.escribirBitacora(f"Output - Add - Error: La ruta o el archivo no existen.")
+             
             return
 
         try:
@@ -26,14 +26,13 @@ class Add():
                 archivo.write(self.body)
 
             print("Texto agregado al archivo correctamente.")
-            self.instancia.escribirBitacora(f'Output - ADD - Texto agregado al archivo correctamente.')
+             
             self.instancia.consola += "Texto agregado al archivo correctamente.\n"
         except IOError as e:
             print("Error al modificar el archivo:", str(e))
-            self.instancia.escribirBitacora(f'Output - ADD - Error al modificar el archivo: {str(e)}')
+             
             self.instancia.consola += f"Error al modificar el archivo: {str(e)}\n"
             return
-        self.instancia.cLocal+=1
 
     
     def Cloud(self):

@@ -15,7 +15,7 @@ class Modify():
         # Verificar si la ruta y el archivo existen
         if not os.path.exists(ruta_directorio):
             print("Error: La ruta o el archivo no existen.")
-            self.instancia.escribirBitacora(f'Output - Modify - Error: La ruta o el archivo no existen.')
+             
             self.instancia.consola += "Error: La ruta o el archivo no existen.\n"
             return
 
@@ -26,14 +26,13 @@ class Modify():
                 archivo.write(self.body)
 
             print("Archivo modificado correctamente.")
-            self.instancia.escribirBitacora(f'Output - Modify - Archivo modificado correctamente.')
+             
             self.instancia.consola += "Archivo modificado correctamente.\n"
         except IOError as e:
             print("Error al modificar el archivo:", str(e))
-            self.instancia.escribirBitacora(f'Output - Modify - Error al modificar el archivo')
+             
             self.instancia.consola += f"Error al modificar el archivo: {str(e)}\n"
             return
-        self.instancia.cLocal+=1
 
     
     def Cloud(self):
