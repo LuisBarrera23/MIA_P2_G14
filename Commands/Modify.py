@@ -33,7 +33,6 @@ class Modify():
              
             self.instancia.consola += f"Error al modificar el archivo: {str(e)}\n"
             return
-        self.instancia.cLocal+=1
 
     
     def Cloud(self):

@@ -170,7 +170,6 @@ class Copy():
                 self.instancia.consola += "Error: La carpeta de origen no existe.\n"
                 return
 
-        self.instancia.cLocal+=1
     
     def Cloud(self):
         pass

@@ -126,7 +126,6 @@ class Transfer():
         print("Transferencia completada.")
          
         self.instancia.consola += "Transferencia completada.\n"
-        self.instancia.cLocal+=1
     
     def Cloud(self):
         pass

@@ -11,7 +11,6 @@ class Create():
     def Local(self):
         ruta_directorio = os.path.join('Archivos', self.path)
         ruta_directorio = ruta_directorio.rstrip()
-        ruta_directorio = ruta_directorio.replace('/', '\\')
         if not os.path.exists(ruta_directorio):
             # Si no existe, crear el directorio
             os.makedirs(ruta_directorio)
@@ -23,7 +22,6 @@ class Create():
         with open(ruta_archivo, 'w') as archivo:
             archivo.write(self.body)
         archivo.close()
-        self.instancia.cLocal+=1
     
     def Cloud(self):
         pass

@@ -40,7 +40,6 @@ class Rename():
              
             self.instancia.consola += f"Error al renombrar: {e}\n"
             return
-        self.instancia.cLocal+=1
 
     
     def Cloud(self):

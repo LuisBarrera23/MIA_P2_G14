@@ -56,7 +56,6 @@ class Delete():
                  
                 self.instancia.consola += f"No se pudo eliminar la carpeta '{ultima_carpeta}' de la ruta '{ruta_directorio}'.\n"
                 return
-        self.instancia.cLocal+=1
     
     def Cloud(self):
         pass
