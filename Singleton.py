@@ -1,7 +1,4 @@
-
-from pydrive2.auth import GoogleAuth
-from pydrive2.drive import GoogleDrive
-from pydrive2.files import FileNotUploadedError
+import boto3
 
 import binascii
 from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
@@ -18,6 +15,8 @@ class Singleton:
             Singleton()
         return Singleton.__instance
     def __init__(self):
+        self.accesskey="AKIAW4UWN4ZEYQ67YN3V"
+        self.secretaccesskey="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"
         self.consola = ""
         if Singleton.__instance != None:
             raise Exception("This class is a singleton!")
@@ -31,7 +30,29 @@ class Singleton:
     def getConsola(self)-> str:
         return self.consola
 
-    
+    def checkUsuario(self,usuario,password):
+        session = boto3.Session(
+            aws_access_key_id=self.accesskey,
+            aws_secret_access_key=self.secretaccesskey
+        )
+        s3 = session.client('s3')
+        bucket_name = 'proyecto2g14'
+        response = s3.get_object(Bucket=bucket_name, Key="miausuarios.txt")
+        stream = response['Body']
+        lineas = stream.read().decode('utf-8').splitlines()
+        for i in range(0, len(lineas), 2):
+            usuario_archivo = lineas[i].strip()
+            password_archivo = lineas[i+1].strip()
+
+            if usuario == usuario_archivo:
+                ciphertext = str(password_archivo)
+                key = "miaproyecto12345"
+                key_hex = binascii.hexlify(key.encode()).decode()
+                password_desencriptado = self.decryptPassword(ciphertext, key_hex)
+                if password == password_desencriptado:
+                    return True
+
+        return False
 
     def checkData(self,usuario, password):
         try:
