@@ -35,16 +35,16 @@ class Copy():
                     # Realizar la copia del archivo
                     shutil.copy2(ruta_directorio, ruta_destino_archivo)
                     print("Archivo copiado exitosamente.")
-                    self.instancia.escribirBitacora(f'Output - Copy - Archivo copiado exitosamente.')
+                     
                     self.instancia.consola += "Archivo copiado exitosamente.\n"
                 else:
                     print("Error: La carpeta de destino no existe.")
-                    self.instancia.escribirBitacora(f'Output - Copy - Error: La carpeta de destino no existe.')
+                     
                     self.instancia.consola += "Error: La carpeta de destino no existe.\n"
                     return
             else:
                 print("Error: El archivo de origen no existe.")
-                self.instancia.escribirBitacora(f'Output - Copy - Error: El archivo de origen no existe.')
+                 
                 self.instancia.consola += "Error: El archivo de origen no existe.\n"
                 return
         else:
@@ -62,7 +62,7 @@ class Copy():
             #                 shutil.copy2(source_file, destination_file)
 
             #         print("Contenido de la carpeta copiado exitosamente.")
-            #         self.instancia.escribirBitacora(f'Output - Copy - Contenido de la carpeta copiado exitosamente.')
+            #          
             #         self.instancia.consola += "Contenido de la carpeta copiado exitosamente.\n"
             
             
@@ -100,7 +100,7 @@ class Copy():
             #                 shutil.copy2(source_file, destination_file)
 
             #         print("Contenido de la carpeta copiado exitosamente.")
-            #         self.instancia.escribirBitacora(f'Output - Copy - Contenido de la carpeta copiado exitosamente.')
+            #          
             #         self.instancia.consola += "Contenido de la carpeta copiado exitosamente.\n"
             
             if os.path.isdir(ruta_directorio):
@@ -157,16 +157,16 @@ class Copy():
                             current_folder.pop(0)
 
                     print("Contenido de la carpeta copiado exitosamente.")
-                    self.instancia.escribirBitacora('Output - Copy - Contenido de la carpeta copiado exitosamente.')
+                     
                     self.instancia.consola += "Contenido de la carpeta copiado exitosamente.\n"
                 else:
                     print("Error: La carpeta de destino no existe.")
-                    self.instancia.escribirBitacora(f'Output - Copy - Error: La carpeta de destino no existe.')
+                     
                     self.instancia.consola += "Error: La carpeta de destino no existe.\n"
                     return
             else:
                 print("Error: La carpeta de origen no existe.")
-                self.instancia.escribirBitacora(f'Output - Copy - Error: La carpeta de origen no existe.')
+                 
                 self.instancia.consola += "Error: La carpeta de origen no existe.\n"
                 return
 

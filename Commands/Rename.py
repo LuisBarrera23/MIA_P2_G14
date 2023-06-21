@@ -16,7 +16,7 @@ class Rename():
         # Verificar si el archivo o carpeta existe
         if not os.path.exists(ruta_directorio):
             print(f"Error: No existe el archivo o carpeta '{self.path}'")
-            self.instancia.escribirBitacora(f"Output - Rename - Error: No existe el archivo o carpeta '{self.path}'")
+             
             self.instancia.consola += f"Error: No existe el archivo o carpeta '{self.path}'\n"
             return
         
@@ -25,7 +25,7 @@ class Rename():
         # Verificar si ya existe un archivo o carpeta con el nuevo nombre
         if os.path.exists(new_path):
             print(f"Error: Ya existe un archivo o carpeta con el nombre '{self.name}'")
-            self.instancia.escribirBitacora(f"Output - Rename - Error: Ya existe un archivo o carpeta con el nombre '{self.name}'")
+             
             self.instancia.consola += f"Error: Ya existe un archivo o carpeta con el nombre '{self.name}'\n"
             return
         
@@ -33,11 +33,11 @@ class Rename():
             # Renombrar el archivo o carpeta
             os.rename(ruta_directorio, new_path)
             print(f"¡Renombrado exitosamente a '{self.name}'!")
-            self.instancia.escribirBitacora(f"Output - Rename - ¡Renombrado exitosamente a '{self.name}'!")
+             
             self.instancia.consola += f"¡Renombrado exitosamente a '{self.name}'!\n"
         except Exception as e:
             print(f"Error al renombrar: {e}")
-            self.instancia.escribirBitacora(f"Output - Rename - Error al renombrar: {e}")
+             
             self.instancia.consola += f"Error al renombrar: {e}\n"
             return
         self.instancia.cLocal+=1

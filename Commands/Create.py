@@ -16,7 +16,7 @@ class Create():
             # Si no existe, crear el directorio
             os.makedirs(ruta_directorio)
             print(f"Directorio '{ruta_directorio}' creado.")
-            self.instancia.escribirBitacora(f'Output - Create - Directorio "{ruta_directorio}" creado.')
+             
             self.instancia.consola += f"Directorio '{ruta_directorio}' creado.\n"
             
         ruta_archivo = os.path.join(ruta_directorio, self.name)
