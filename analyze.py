@@ -19,16 +19,16 @@ class Analyze():
         self.lines = []
         self.parameters = []
         self.commandList = [
-                            "configure", 
                             "create", 
                             "delete", 
                             "copy", 
                             "transfer", 
                             "rename", 
                             "modify", 
-                            "add", 
                             "backup",
-                            "exec"
+                            "recovery",
+                            "delete_all",
+                            "open"
                         ]
         self.configure = False # Sirve para verificar cada vez que se corre la consola si el configure viene o no
         self.exec = False # Sirve para verificar cada vez que se corre la consola si el exec viene o no
@@ -50,19 +50,7 @@ class Analyze():
                 continue
             command = self.lines[i].split()
             if str(command[0]).lower() in self.commandList:
-                if i == 0:
-                    if str(command[0]).lower() == "configure":
-                        self.configure = True
-                        if not self.Configure(self.lines[i]):
-                            return
-                    elif str(command[0]).lower() == "exec":
-                        self.exec = True
-                        self.Exec(self.lines[i])
-                    else:
-                        self.instancia.consola += "Error, se debe usar el comando 'configure' o 'exec' de primero.\n"
-                        print("Error, se debe usar el comando 'configure' o 'exec' de primero.")
-                        return
-                elif str(command[0]).lower() == "create":
+                if str(command[0]).lower() == "create":
                     self.Create(self.lines[i])
                 elif str(command[0]).lower() == "delete":
                     self.Delete(self.lines[i])
@@ -74,10 +62,14 @@ class Analyze():
                     self.Rename(self.lines[i])
                 elif str(command[0]).lower() == "modify":
                     self.Modify(self.lines[i])
-                elif str(command[0]).lower() == "add":
-                    self.Add(self.lines[i])
                 elif str(command[0]).lower() == "backup":
                     self.Backup()
+                elif str(command[0]).lower() == "recovery":
+                    self.Recovery(self.lines[i])
+                elif str(command[0]).lower() == "delete_all":
+                    self.DeleteAll(self.lines[i])
+                elif str(command[0]).lower() == "open":
+                    self.Open(self.lines[i])
             else:
                 print(f"Este comando no existe: {command[0]}")
                 self.instancia.consola += f"Este comando no existe: {command[0]}\n"
@@ -648,8 +640,17 @@ class Analyze():
              
             self.instancia.consola += "Error con los parámetros obligatorios del comando: Modify\n"
             return
-     
-    def Add(self, command):
+
+    def Backup(self):
+        # Codigo para realizar el backup
+        backup = Backup()
+        instancia = Singleton.getInstance()
+        if instancia.type == "local":
+            backup.Local()
+        elif instancia.type == "cloud":
+            backup.Cloud()
+
+    def Recovery(self, command):
         body = None
         path = None
         
@@ -727,12 +728,161 @@ class Analyze():
              
             self.instancia.consola += "Error con los parámetros obligatorios del comando: Add\n"
             return
-         
-    def Backup(self):
-        # Codigo para realizar el backup
-        backup = Backup()
-        instancia = Singleton.getInstance()
-        if instancia.type == "local":
-            backup.Local()
-        elif instancia.type == "cloud":
-            backup.Cloud()
+
+    def DeleteAll(self, command):
+        body = None
+        path = None
+        
+        current = command.split(" -")
+        if len(current) < 3 or len(current) > 3:
+            print("Error, la cantidad de parámetros es incorrecta.")
+             
+            self.instancia.consola += "Error, la cantidad de parámetros es incorrecta.\n"
+            return
+        
+        for i in range(1,len(current)):
+            parametro = current[i].split("->")
+            if len(parametro) != 2:
+                print("Error con los parámetros de: add.")
+                 
+                self.instancia.consola += "Error con los parámetros de: add.\n"
+                return
+            
+            if str(parametro[0]).lower() == "body":
+                parametro[1] = str(parametro[1]).strip()
+                if parametro[1].startswith('"') and parametro[1].endswith('"'):
+                    body = parametro[1][1:-1]
+                else:
+                    print('Error, el body del archivo no está dentro de "".')
+                     
+                    self.instancia.consola += 'Error, el body del archivo no está dentro de "".\n'
+                    return  
+            elif str(parametro[0]).lower() == "path":
+                parametro[1] = str(parametro[1]).strip()
+                if ' ' in parametro[1]:
+                    if parametro[1].startswith('/'):
+                        parametro[1] = parametro[1][1:]
+                    if parametro[1].endswith('/'):
+                        parametro[1] = parametro[1][:-1]
+
+                    newPath = ""
+                    for cruta in str(parametro[1]).split("/"):
+                        if " " in cruta:
+                            if cruta.startswith('"') and cruta.endswith('"'):
+                                # Eliminar las comillas y realizar un strip
+                                newPath += cruta[1:-1].strip()
+                                newPath += "/"
+                            else:
+                                print('Error, la ruta del archivo tiene espacios en blanco y no está dentro de "".')
+                                 
+                                self.instancia.consola += 'Error, la ruta del archivo tiene espacios en blanco y no está dentro de "".\n'
+                                return
+                        else:
+                            newPath += cruta.strip()
+                            newPath += "/"
+                    
+                    parametro[1] = newPath[:-1]
+                else:
+                    if parametro[1].startswith('/'):
+                        parametro[1] = parametro[1][1:]
+                    if parametro[1].endswith('/'):
+                        parametro[1] = parametro[1][:-1]
+                    parametro[1] = parametro[1].strip()
+                path = parametro[1]
+            else:
+                print(f"Error, este parámetro no existe: {parametro[0]}.")
+                 
+                self.instancia.consola += f"Error, este parámetro no existe: {parametro[0]}.\n"
+                return
+        
+        if body is not None and path is not None:
+            add = Add(path, body)
+            if self.instancia.type=="local":
+                add.Local()
+            elif self.instancia.type=="cloud":
+                add.Cloud()
+            
+        else:
+            print("Error con los parámetros obligatorios del comando: Add")
+             
+            self.instancia.consola += "Error con los parámetros obligatorios del comando: Add\n"
+            return
+
+    def Open(self, command):
+        body = None
+        path = None
+        
+        current = command.split(" -")
+        if len(current) < 3 or len(current) > 3:
+            print("Error, la cantidad de parámetros es incorrecta.")
+             
+            self.instancia.consola += "Error, la cantidad de parámetros es incorrecta.\n"
+            return
+        
+        for i in range(1,len(current)):
+            parametro = current[i].split("->")
+            if len(parametro) != 2:
+                print("Error con los parámetros de: add.")
+                 
+                self.instancia.consola += "Error con los parámetros de: add.\n"
+                return
+            
+            if str(parametro[0]).lower() == "body":
+                parametro[1] = str(parametro[1]).strip()
+                if parametro[1].startswith('"') and parametro[1].endswith('"'):
+                    body = parametro[1][1:-1]
+                else:
+                    print('Error, el body del archivo no está dentro de "".')
+                     
+                    self.instancia.consola += 'Error, el body del archivo no está dentro de "".\n'
+                    return  
+            elif str(parametro[0]).lower() == "path":
+                parametro[1] = str(parametro[1]).strip()
+                if ' ' in parametro[1]:
+                    if parametro[1].startswith('/'):
+                        parametro[1] = parametro[1][1:]
+                    if parametro[1].endswith('/'):
+                        parametro[1] = parametro[1][:-1]
+
+                    newPath = ""
+                    for cruta in str(parametro[1]).split("/"):
+                        if " " in cruta:
+                            if cruta.startswith('"') and cruta.endswith('"'):
+                                # Eliminar las comillas y realizar un strip
+                                newPath += cruta[1:-1].strip()
+                                newPath += "/"
+                            else:
+                                print('Error, la ruta del archivo tiene espacios en blanco y no está dentro de "".')
+                                 
+                                self.instancia.consola += 'Error, la ruta del archivo tiene espacios en blanco y no está dentro de "".\n'
+                                return
+                        else:
+                            newPath += cruta.strip()
+                            newPath += "/"
+                    
+                    parametro[1] = newPath[:-1]
+                else:
+                    if parametro[1].startswith('/'):
+                        parametro[1] = parametro[1][1:]
+                    if parametro[1].endswith('/'):
+                        parametro[1] = parametro[1][:-1]
+                    parametro[1] = parametro[1].strip()
+                path = parametro[1]
+            else:
+                print(f"Error, este parámetro no existe: {parametro[0]}.")
+                 
+                self.instancia.consola += f"Error, este parámetro no existe: {parametro[0]}.\n"
+                return
+        
+        if body is not None and path is not None:
+            add = Add(path, body)
+            if self.instancia.type=="local":
+                add.Local()
+            elif self.instancia.type=="cloud":
+                add.Cloud()
+            
+        else:
+            print("Error con los parámetros obligatorios del comando: Add")
+             
+            self.instancia.consola += "Error con los parámetros obligatorios del comando: Add\n"
+            return
