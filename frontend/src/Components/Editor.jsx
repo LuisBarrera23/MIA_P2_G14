@@ -44,7 +44,8 @@ function Editor({ onLogout }) {
   }
 
   function sendData() {
-    // const msg = document.getElementById(`TXT${TxtA}`);
+    // const msg = document.getElementById('TXT1');
+    // setTextValue(msg.value)
     const objeto = {
       entrada: textValue,
     };
@@ -195,8 +196,9 @@ function Editor({ onLogout }) {
                         background: "url(http://i.imgur.com/2cOaJ.png)", backgroundAttachment: "local", backgroundRepeat: "no-repeat",
                         paddingLeft: "35px", paddingTop: "10px", borderColor: "#ccc",  id: "TXT1"
                       }}
-                      // value={textValue}
-                      defaultValue={textValue}
+                      // defaultValue={textValue}
+                      value={textValue}
+                      onChange={(e) => setTextValue(e.target.value)}
                       >
                       </textarea>
                     </div>
