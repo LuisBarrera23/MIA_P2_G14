@@ -3,15 +3,21 @@ import shutil
 from Singleton import Singleton
 
 class Rename():
-    def __init__(self, path, name) -> None:
+    def __init__(self, path, name, type) -> None:
         self.path = path
         self.name = name
+        self.type = type
         self.instancia = Singleton.getInstance()
         
+
+    def run(self):
+        if self.type=="server":
+            self.Local()
+        elif self.type=="bucket":
+            self.Cloud()
     def Local(self):
         ruta_directorio = os.path.join('Archivos', self.path)
         ruta_directorio = ruta_directorio.rstrip()
-        ruta_directorio = ruta_directorio.replace('/', '\\')
 
         # Verificar si el archivo o carpeta existe
         if not os.path.exists(ruta_directorio):

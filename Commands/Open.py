@@ -1,17 +1,19 @@
 import os
 from Singleton import Singleton
 
-class Backup():
-    def __init__(self,typeto, typefrom, ip, port, name) -> None:
-        self.typeto=typeto
-        self.typefrom=typefrom
+class Open():
+    def __init__(self,type, ip, port, name) -> None:
+        self.type=type
         self.ip=ip
         self.port=port
         self.name=name
         self.instancia = Singleton.getInstance()
         
     def run(self):
-        pass
+        if self.type=="server":
+            self.Local()
+        elif self.type=="bucket":
+            self.Cloud()
     
     def Local(self):
         pass

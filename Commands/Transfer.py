@@ -3,25 +3,23 @@ import shutil
 from Singleton import Singleton
 
 class Transfer():
-    def __init__(self, pfrom, pto, mode) -> None:
+    def __init__(self, pfrom, pto, typeto, typefrom) -> None:
         self.pfrom = pfrom
         self.pto = pto
-        self.mode = mode
+        self.typeto = typeto
+        self.typefrom=typefrom
         self.instancia = Singleton.getInstance()
+
+    def run(self):
+        if self.typefrom == "server" and self.typeto=="server":
+            self.Local()
         
     def Local(self):
-        if str(self.mode).lower() !=  str(self.instancia.type).lower():
-            print("El modo seleccionado no es igual al de la configuración.")
-             
-            self.instancia.consola += "El modo seleccionado no es igual al de la configuración.\n"
-            return
         ruta_directorio = os.path.join('Archivos', self.pfrom)
         ruta_directorio = ruta_directorio.rstrip()
-        ruta_directorio = ruta_directorio.replace('/', '\\')
 
         ruta_destino = os.path.join('Archivos', self.pto)
         ruta_destino = ruta_destino.rstrip()
-        ruta_destino = ruta_destino.replace('/', '\\')
             
         # Validar la existencia del origen (ruta_directorio)
         if not os.path.exists(ruta_directorio):

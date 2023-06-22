@@ -1,7 +1,7 @@
 import os
 from Singleton import Singleton
 
-class Backup():
+class Recovery():
     def __init__(self,typeto, typefrom, ip, port, name) -> None:
         self.typeto=typeto
         self.typefrom=typefrom
