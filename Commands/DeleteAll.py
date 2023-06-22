@@ -23,6 +23,7 @@ class DeleteAll():
             elif os.path.isdir(archivo_path):
                 shutil.rmtree(archivo_path)
         print("La carpeta se ha vaciado correctamente.")
+        self.instancia.consola+="El contenido de la carpeta Archivos del server se ha vaciado correctamente.\n"
     
     import boto3
 
@@ -44,5 +45,7 @@ class DeleteAll():
         if objects_to_delete:
             s3.delete_objects(Bucket=bucket_name, Delete={'Objects': objects_to_delete})
             print("El contenido de la carpeta se ha vaciado correctamente.")
+            self.instancia.consola+="El contenido de la carpeta Archivos del bucket se ha vaciado correctamente.\n"
         else:
             print("La carpeta ya está vacía.")
+            self.instancia.consola+="La carpeta ya está vacía.\n"

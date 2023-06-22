@@ -5,6 +5,7 @@ from flask_cors import CORS
 import json
 
 from Singleton import Singleton
+from analyze import Analyze
 
 app = Flask(__name__)
 CORS(app)
@@ -28,7 +29,10 @@ def login():
 def analizar():
     entrada=request.json['entrada']
     instancia=Singleton.getInstance()
-    return jsonify({'salida':"xd"})
+    instancia.consola=""
+    analizador=Analyze(entrada)
+    analizador.analyze()
+    return jsonify({'salida':instancia.consola})
         
     
 
