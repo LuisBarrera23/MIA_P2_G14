@@ -24,22 +24,25 @@ class DeleteAll():
                 shutil.rmtree(archivo_path)
         print("La carpeta se ha vaciado correctamente.")
     
+    import boto3
+
     def Cloud(self):
         session = boto3.Session(
             aws_access_key_id=self.instancia.accesskey,
             aws_secret_access_key=self.instancia.secretaccesskey,
-        ) 
-        carpeta = 'Archivos'
-        s3 = session.resource('s3')
-        bucket = s3.Bucket('proyecto2g14' )
+        )
+        carpeta = 'Archivos/'
+        s3 = session.client('s3')
+        bucket_name = 'proyecto2g14'
 
         objects_to_delete = []
-        for obj in bucket.objects.filter(Prefix=carpeta):
-            if obj.key != carpeta:
-                objects_to_delete.append({'Key': obj.key})
+        result = s3.list_objects_v2(Bucket=bucket_name, Prefix=carpeta)
+        for obj in result.get('Contents', []):
+            if obj['Key'] != carpeta:
+                objects_to_delete.append({'Key': obj['Key']})
 
         if objects_to_delete:
-            bucket.delete_objects(Delete={'Objects': objects_to_delete})
+            s3.delete_objects(Bucket=bucket_name, Delete={'Objects': objects_to_delete})
             print("El contenido de la carpeta se ha vaciado correctamente.")
         else:
             print("La carpeta ya está vacía.")
