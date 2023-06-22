@@ -195,7 +195,8 @@ function Editor({ onLogout }) {
                         background: "url(http://i.imgur.com/2cOaJ.png)", backgroundAttachment: "local", backgroundRepeat: "no-repeat",
                         paddingLeft: "35px", paddingTop: "10px", borderColor: "#ccc",  id: "TXT1"
                       }}
-                      value={textValue}
+                      // value={textValue}
+                      defaultValue={textValue}
                       >
                       </textarea>
                     </div>

@@ -1,0 +1,30 @@
+CREATE -name->calificacion1.txt  -path->/carpeta1/ -body->"Este es el contenido del archivo1" -type->server
+crEatE -name->calificacion2.txt  -path->/carpeta1/ -body->"Este es el contenido del archivo2" -type->server
+create -name->calificacion1.txt  -path->/"carpeta Calificacion"/ -body->"Un sistema de archivos es una estructura de directorios completa, que incluye un directorio raíz y cualquier subdirectorio y archivos por debajo suyo" -type->server
+create -name->calificacion2.txt  -path->/"carpeta Calificacion"/ -body->"contenido archivo2" -type->server
+create -name->calificacion3.txt  -path->/"carpeta Calificacion"/ -body->"Se trata de habilitar uno o varios discos duros en una red local, de forma que los datos que allí se almacenen permanezcan accesibles a todos los dispositivos que quieran utilizarlos" -type->server
+renAme -path->/carpeta1/calificacion1.txt -name->nuevo_cali1.txt -type->server
+rename -path->/carpeta1/calificacion1.txt -name->nuevo_cali2.txt -type->server
+renAme -path->/carpeta_no_existe/calificacion2.txt -name->nuevo_cali2.txt -type->server
+renAme -path->/carpeta1/calificacion2.txt -name->nuevo_cali2.txt -type->server
+coPy -from->/carpeta1/nuevo_cali1.txt -to->/"carpeta Calificacion"/ -type_to->server -type_from->server
+transfer -from->/carpeta1/nuevo_cali2.txt -to->/"carpeta Calificacion"/ -type_to->server -type_from->server
+delete -path->/carpeta1/ -name->calificacion2.txt -type->server
+delete -path->/"carpeta Calificacion"/ -nAME->calificacion3.txt -type->server
+modify -paTH->/"carpeta Calificacion"/nuevo_cali1.txt -body->"Se trata de habilitar uno o varios discos duros en una red local, de forma que los datos que allí se almacenen permanezcan accesibles a todos los dispositivos que quieran utilizarlos" -type->server
+create -name->calificacion4.txt  -path->/carpeta1/ejemplo/ -body->"Este es el contenido del archivo4" -type->server
+create -name->calificacion5.txt  -path->/carpeta1/ejemplo/ -body->"Este es el contenido del archivo5" -type->server
+create -name->calificacion6.txt  -path->/carpeta1/ejemplo/ -body->"Este es el contenido del archivo6" -type->server
+TRANSFER -from->/carpeta1/ -to->/"carpeta Calificacion"/ -type_to->server -type_from->server
+CREATE -name->calificacion1.txt  -path->/"carpeta Calificacion 2"/ -body->"Un sistema de archivos es una estructura de directorios completa, que incluye un directorio raíz y cualquier subdirectorio y archivos por debajo suyo" -type->server
+CREATE -name->calificacion2.txt  -path->/"carpeta Calificacion 2"/ -body->"contenido archivo2" -type->server
+CREATE -name->calificacion3.txt  -path->/"carpeta Calificacion 2"/ -body->"Se trata de habilitar uno o varios discos duros en una red local, de forma que los datos que allí se almacenen permanezcan accesibles a todos los dispositivos que quieran utilizarlos" -type->server
+TRANSFER -from->/"carpeta Calificacion"/ -to->/carpeta1/ -type_to->server -type_from->server
+delete -path->/"carpeta no_existe"/ -type->server
+CREATE -name->calificacion1.txt  -path->/"carpeta prueba 2"/ -body->"Un sistema de archivos es una estructura de directorios completa, que incluye un directorio raíz y cualquier subdirectorio y archivos por debajo suyo" -type->server
+CREATE -name->calificacion2.txt  -path->/"carpeta prueba 2"/ -body->"contenido archivo2" -type->server
+CREATE -name->calificacion3.txt  -path->/"carpeta prueba 2"/ -body->"Se trata de habilitar uno o varios discos duros en una red local, de forma que los datos que allí se almacenen permanezcan accesibles a todos los dispositivos que quieran utilizarlos" -type->server
+DELETE -path->/"carpeta prueba 2"/ -type->server
+modify -paTH->/"carpeta Calificacion 2"/archivo_no_existe.txt -body->"Este texto se modifico" -type->server
+modify -paTH->/"carpeta Calificacion 2"/calificacion2.txt -body->"Este texto se modifico" -type->server
+coPy -from->/carpeta no_existe/archiv_no_existe.txt -to->/"carpeta Calificacion"/ -type_to->server -type_from->server
