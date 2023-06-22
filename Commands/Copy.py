@@ -3,19 +3,22 @@ import shutil
 from Singleton import Singleton
 
 class Copy():
-    def __init__(self, pfrom, pto) -> None:
+    def __init__(self, pfrom, pto , typeto, typefrom) -> None:
         self.pfrom = pfrom
         self.pto = pto
+        self.typeto=typeto
+        self.typefrom=typefrom
         self.instancia=Singleton.getInstance()
         
+    def run(self):
+        if self.typefrom == "server" and self.typeto=="server":
+            self.Local()
     def Local(self):
         ruta_directorio = os.path.join('Archivos', self.pfrom)
         ruta_directorio = ruta_directorio.rstrip()
-        ruta_directorio = ruta_directorio.replace('/', '\\')
 
         ruta_destino = os.path.join('Archivos', self.pto)
         ruta_destino = ruta_destino.rstrip()
-        ruta_destino = ruta_destino.replace('/', '\\')
         
         if ruta_directorio.endswith(".txt"):
             if os.path.isfile(ruta_directorio):

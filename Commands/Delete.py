@@ -3,16 +3,21 @@ import shutil
 from Singleton import Singleton
 
 class Delete():
-    def __init__(self, path, name) -> None:
+    def __init__(self, path, name, type) -> None:
         self.path = path
         self.name = name
+        self.type = type
         self.instancia = Singleton.getInstance()
         
+    def run(self):
+        if self.type=="server":
+            self.Local()
+        elif self.type=="bucket":
+            self.Cloud()
     def Local(self):
         # Validar si el path existe
         ruta_directorio = os.path.join('Archivos', self.path)
         ruta_directorio = ruta_directorio.rstrip()
-        ruta_directorio = ruta_directorio.replace('/', '\\')
         if os.path.exists(ruta_directorio):
             print(f"La ruta existe: {self.path}")
             print("-------------------------------------")
@@ -26,7 +31,6 @@ class Delete():
         if self.name is not None:
             ruta_directorio = os.path.join('Archivos', self.path)
             ruta_directorio = ruta_directorio.rstrip()
-            ruta_directorio = ruta_directorio.replace('/', '\\')
             ruta_archivo = os.path.join(ruta_directorio, self.name)
                 
             if os.path.exists(ruta_archivo):
@@ -43,7 +47,6 @@ class Delete():
         else:
             ruta_directorio = os.path.join('Archivos', self.path)
             ruta_directorio = ruta_directorio.rstrip()
-            ruta_directorio = ruta_directorio.replace('/', '\\')
             
             ultima_carpeta = os.path.basename(ruta_directorio)
             if os.path.exists(ruta_directorio) and os.path.isdir(ruta_directorio):
