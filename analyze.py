@@ -885,16 +885,35 @@ class Analyze():
                 port = parametro[1]
             elif str(parametro[0]).lower() == "name":
                 parametro[1] = str(parametro[1]).strip()
-                if " " in parametro[1]:
-                    if parametro[1].startswith('"') and parametro[1].endswith('"'):
-                        parametro[1] = parametro[1][1:-1]
-                    else:
-                        print('Error, el name del archivo no está dentro de "".')
-                        self.instancia.consola += 'Error, el name del archivo no está dentro de "".\n'
-                        return
-                elif parametro[1].startswith('"') and parametro[1].endswith('"'):
-                    parametro[1] = parametro[1][1:-1]
-                
+                if ' ' in parametro[1]:
+                    if parametro[1].startswith('/'):
+                        parametro[1] = parametro[1][1:]
+                    if parametro[1].endswith('/'):
+                        parametro[1] = parametro[1][:-1]
+
+                    newPath = ""
+                    for cruta in str(parametro[1]).split("/"):
+                        if " " in cruta:
+                            if cruta.startswith('"') and cruta.endswith('"'):
+                                # Eliminar las comillas y realizar un strip
+                                newPath += cruta[1:-1].strip()
+                                newPath += "/"
+                            else:
+                                print('Error, la ruta del archivo tiene espacios en blanco y no está dentro de "".')
+                                 
+                                self.instancia.consola += 'Error, la ruta del archivo tiene espacios en blanco y no está dentro de "".\n'
+                                return
+                        else:
+                            newPath += cruta.strip()
+                            newPath += "/"
+                    
+                    parametro[1] = newPath[:-1]
+                else:
+                    if parametro[1].startswith('/'):
+                        parametro[1] = parametro[1][1:]
+                    if parametro[1].endswith('/'):
+                        parametro[1] = parametro[1][:-1]
+                    parametro[1] = parametro[1].strip()
                 name = parametro[1]
             else:
                 print(f"Error, este parámetro no existe: {parametro[0]}.")
