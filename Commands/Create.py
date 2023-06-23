@@ -9,7 +9,7 @@ class Create():
         self.path = path
         self.type = type
         self.instancia = Singleton.getInstance()
-        print(f"{self.name}, {self.body}, {self.path}, {self.type}")
+        # print(f"{self.name}, {self.body}, {self.path}, {self.type}")
         
 
     def run(self):
