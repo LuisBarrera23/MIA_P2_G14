@@ -1,5 +1,6 @@
 import os
 import shutil
+import boto3
 from Singleton import Singleton
 
 class Delete():
@@ -61,4 +62,45 @@ class Delete():
                 return
     
     def Cloud(self):
-        pass
+        session = boto3.Session(
+            aws_access_key_id=self.instancia.accesskey,
+            aws_secret_access_key=self.instancia.secretaccesskey,
+        )
+        ruta = "Archivos/"+self.path
+        print(ruta)
+        s3 = session.client('s3')
+        bucket_name = 'proyecto2g14'
+        response = s3.list_objects_v2(Bucket=bucket_name, Prefix=ruta)
+        if 'Contents' in response:
+            print(f"La ruta existe: {ruta}")
+            print("-------------------------------------")
+        else:
+            print(f"Error, la ruta no existe: {ruta}")
+            self.instancia.consola += f"Error, la ruta no existe: {ruta}\n"
+            return
+        
+        if self.name == None:
+            s3 = session.resource('s3')
+            bucket = s3.Bucket('proyecto2g14')
+            
+            ruta="Archivos/"+self.path+"/"
+            objects_to_delete = []
+            for obj in bucket.objects.filter(Prefix=ruta):
+                objects_to_delete.append({'Key': obj.key})
+
+            bucket.delete_objects(Delete={'Objects': objects_to_delete})
+            self.instancia.consola += f"La carpeta se ha eliminado correctamente: {self.path}.\n"
+
+        else:# en caso que sea un archivo ------------------------------------------------------
+            ruta = "Archivos/"+self.path+"/"+self.name
+            response = s3.list_objects_v2(Bucket=bucket_name, Prefix=ruta)
+            if 'Contents' in response:
+                print(f"El archivo existe: {self.name}")
+                objects = response['Contents']
+                for obj in objects:
+                    s3.delete_object(Bucket=bucket_name, Key=obj['Key'])
+                self.instancia.consola += f"El archivo {self.name} fue eliminado.\n"
+            else:
+                print(f"Error, El archivo no existe: {self.name}")
+                self.instancia.consola += f"Error, El archivo no existe: {self.name}.\n"
+                return
