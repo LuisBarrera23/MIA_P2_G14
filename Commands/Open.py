@@ -1,6 +1,7 @@
 import os
 from Singleton import Singleton
 import requests
+import boto3
 
 class Open():
     def __init__(self,type, ip, port, name) -> None:
@@ -34,7 +35,26 @@ class Open():
             self.instancia.consola += f"Error, no existe el archivo: {nombre[-1]}\n"
     
     def Cloud(self):
-        pass
+        session = boto3.Session(
+            aws_access_key_id=self.instancia.accesskey,
+            aws_secret_access_key=self.instancia.secretaccesskey,
+        )
+        carpeta = 'Archivos'
+        s3 = session.client('s3')
+        bucket_name = 'proyecto2g14'
+        
+        ruta_archivo = carpeta + '/' + self.name
+        nombre = ruta_archivo.split("/")
+        
+        contenido = self.obtener_contenido_archivo(s3, bucket_name, ruta_archivo)
+        if contenido is not None:
+            print(f"-> Este es el contenido del archivo {nombre[-1]}:\n {contenido}")
+            self.instancia.consola += "-----------------------------------------------------------------------------------\n"
+            self.instancia.consola += f"-> Este es el contenido del archivo {nombre[-1]}:\n {contenido}\n"
+            self.instancia.consola += "-----------------------------------------------------------------------------------\n"
+        else:
+            print(f"Error, no existe el archivo: {nombre[-1]}")
+            self.instancia.consola += f"Error, no existe el archivo: {nombre[-1]}\n"
 
     def Api(self):
         url = f'http://{self.ip}:{self.port}/open'
@@ -57,3 +77,11 @@ class Open():
         else:
             print(f'Error en la comunicación con el backend con ip: {self.ip} y port: {self.port}.')
             self.instancia.consola += f'Error en la comunicación con el backend con ip: {self.ip} y port: {self.port}.\n'
+            
+    def obtener_contenido_archivo(self, s3, bucket_name, ruta_archivo):
+        try:
+            response = s3.get_object(Bucket=bucket_name, Key=ruta_archivo)
+            contenido = response['Body'].read().decode('utf-8')
+            return contenido
+        except s3.exceptions.NoSuchKey:
+            return None
