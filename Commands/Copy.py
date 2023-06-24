@@ -13,6 +13,12 @@ class Copy():
     def run(self):
         if self.typefrom == "server" and self.typeto=="server":
             self.Local()
+        elif self.typefrom == "server" and self.typeto=="bucket":
+            self.Server_bucket()
+        elif self.typefrom == "bucket" and self.typeto=="server":
+            self.Bucket_server()
+        elif self.typefrom == "bucket" and self.typeto=="bucket":
+            self.Cloud()
     def Local(self):
         ruta_directorio = os.path.join('Archivos', self.pfrom)
         ruta_directorio = ruta_directorio.rstrip()
@@ -51,61 +57,7 @@ class Copy():
                 self.instancia.consola += "Error: El archivo de origen no existe.\n"
                 return
         else:
-            # if os.path.isdir(ruta_directorio):
-            #     if os.path.exists(ruta_destino) and os.path.isdir(ruta_destino):
-            #         for root, dirs, files in os.walk(ruta_directorio):
-            #             for dir in dirs:
-            #                 source_dir = os.path.join(root, dir)
-            #                 destination_dir = os.path.join(ruta_destino, os.path.relpath(source_dir, ruta_directorio))
-            #                 os.makedirs(destination_dir, exist_ok=True)
-
-            #             for file in files:
-            #                 source_file = os.path.join(root, file)
-            #                 destination_file = os.path.join(ruta_destino, os.path.relpath(source_file, ruta_directorio))
-            #                 shutil.copy2(source_file, destination_file)
-
-            #         print("Contenido de la carpeta copiado exitosamente.")
-            #          
-            #         self.instancia.consola += "Contenido de la carpeta copiado exitosamente.\n"
-            
-            
-            # if os.path.isdir(ruta_directorio):
-            #     if os.path.exists(ruta_destino) and os.path.isdir(ruta_destino):
-            #         for root, dirs, files in os.walk(ruta_directorio):
-            #             for dir in dirs:
-            #                 source_dir = os.path.join(root, dir)
-            #                 destination_dir = os.path.join(ruta_destino, os.path.relpath(root, ruta_directorio), dir)
-
-            #                 # Verificar si el directorio ya existe en la ruta de destino
-            #                 contador = 1
-            #                 nombre_carpeta = dir
-            #                 while os.path.exists(destination_dir):
-            #                     nombre_copia = f"{nombre_carpeta}_copia{contador}"
-            #                     destination_dir = os.path.join(ruta_destino, os.path.relpath(root, ruta_directorio), nombre_copia)
-            #                     contador += 1
-
-            #                 os.makedirs(destination_dir, exist_ok=True)
-
-            #             for file in files:
-            #                 source_file = os.path.join(root, file)
-            #                 destination_file = os.path.join(ruta_destino, os.path.relpath(root, ruta_directorio), file)
-
-            #                 # Verificar si el archivo ya existe en la ruta de destino
-            #                 contador = 1
-            #                 nombre_archivo = file
-            #                 while os.path.exists(destination_file):
-            #                     nombre_sin_extension = os.path.splitext(nombre_archivo)[0]
-            #                     extension = os.path.splitext(nombre_archivo)[1]
-            #                     nombre_copia = f"{nombre_sin_extension}_copia{contador}{extension}"
-            #                     destination_file = os.path.join(ruta_destino, os.path.relpath(root, ruta_directorio), nombre_copia)
-            #                     contador += 1
-
-            #                 shutil.copy2(source_file, destination_file)
-
-            #         print("Contenido de la carpeta copiado exitosamente.")
-            #          
-            #         self.instancia.consola += "Contenido de la carpeta copiado exitosamente.\n"
-            
+           
             if os.path.isdir(ruta_directorio):
                 if os.path.exists(ruta_destino) and os.path.isdir(ruta_destino):
                     current_folder = []
@@ -130,11 +82,6 @@ class Copy():
                                     contador += 1
                                     current_folder[-1] = nombre_copia
 
-                                # if not os.path.exists(str(destination_dir)):
-                                #     os.makedirs(destination_dir)
-                                    # os.makedirs(destination_dir, exist_ok=True)
-                                # print(source_dir)
-                                # print(destination_dir)
                                 shutil.copytree(source_dir, destination_dir)                            
 
                             for file in files:
@@ -173,6 +120,11 @@ class Copy():
                 self.instancia.consola += "Error: La carpeta de origen no existe.\n"
                 return
 
-    
-    def Cloud(self):
+    def Server_bucket(self):
+        pass
+
+    def Bucket_server(self):
+        pass
+
+    def Cloud(self):#funcion para bucket bucket
         pass
