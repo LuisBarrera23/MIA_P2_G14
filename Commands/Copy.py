@@ -1,5 +1,7 @@
 import os
 import shutil
+from pathlib import Path
+import boto3
 from Singleton import Singleton
 
 class Copy():
@@ -121,6 +123,56 @@ class Copy():
                 return
 
     def Server_bucket(self):
+        rutaorigen=Path("Archivos/"+self.pfrom)
+        rutadestino="Archivos/"+self.pto
+        if rutaorigen.exists():
+            session = boto3.Session(
+                aws_access_key_id=self.instancia.accesskey,
+                aws_secret_access_key=self.instancia.secretaccesskey,
+            )
+            s3 = session.client('s3')
+            if rutaorigen.is_file():
+                if not self.file_or_folder_exists(s3,rutadestino):
+                    self.instancia.consola += f"Error: La carpeta de destino no existe {rutadestino}\n"
+                    return
+                nombreArchivo=rutaorigen.name
+                with open(rutaorigen, 'rb') as archivo:
+                    nombreVerificado=nombreArchivo
+                    nombreArchivo, extension = os.path.splitext(os.path.basename(rutaorigen))
+                    i=1
+                    while self.file_or_folder_exists(s3,rutadestino+"/"+nombreVerificado):
+                        nombreVerificado = nombreArchivo+f"_{i}.{extension}"
+                        i+=1
+
+                    s3.upload_fileobj(archivo, 'proyecto2g14', rutadestino+"/"+nombreVerificado)
+                    archivo.close()
+                    self.instancia.consola += f"Archivo copiado exitosamente a '{rutadestino}' del bucket\n"
+            elif rutaorigen.is_dir():
+                # print(f"es una carpeta.")
+                if not self.file_or_folder_exists(s3,rutadestino):
+                    self.instancia.consola += f"Error: La carpeta de destino no existe {rutadestino}\n"
+                    return
+                
+                i=0
+                for root, dirs, files in os.walk(rutaorigen):
+                    for file_name in files:
+                        # print(file_name)
+                        local_file_path = os.path.join(root, file_name)
+                        relative_path = os.path.relpath(local_file_path, rutaorigen)
+                        s3_file_path = os.path.join(rutadestino, relative_path).replace("\\", "/")
+                        s3_file_path = s3_file_path.lstrip("/")
+                        s3_file_path = os.path.dirname(s3_file_path)
+                        nombreArchivo, extension = os.path.splitext(file_name)
+                        nombreVerificado = nombreArchivo + extension
+                        i = 1
+                        while self.file_or_folder_exists(s3, s3_file_path + "/" + nombreVerificado):
+                            nombreVerificado = f"{nombreArchivo}_{i}{extension}"
+                            i += 1
+                        s3.upload_file(local_file_path, 'proyecto2g14', s3_file_path + "/" + nombreVerificado)
+                self.instancia.consola += f"Contenido de la carpeta copiado exitosamente a '{rutadestino}' del bucket\n"
+        else:
+            print(f"{rutaorigen} no existe en el sistema de archivos.")
+            self.instancia.consola += f"Error: La carpeta o archivo de origen no existe {rutaorigen}\n"
         pass
 
     def Bucket_server(self):
@@ -128,3 +180,9 @@ class Copy():
 
     def Cloud(self):#funcion para bucket bucket
         pass
+
+
+    def file_or_folder_exists(self, s3, path):
+        response = s3.list_objects_v2(Bucket='proyecto2g14', Prefix=path)
+        return 'Contents' in response
+    
