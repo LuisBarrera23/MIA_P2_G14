@@ -291,7 +291,10 @@ class Copy():
         rutaorigen="Archivos/"+self.pfrom
         rutadestino="Archivos/"+self.pto+"/"
         if not self.file_or_folder_exists(s3,rutaorigen):
-            self.instancia.consola += f"Error: La carpeta de origen no existe {rutaorigen}\n"
+            self.instancia.consola += f"Error: La carpeta o archivo de origen no existe {rutaorigen}\n"
+            return
+        if not self.file_or_folder_exists(s3,rutadestino):
+            self.instancia.consola += f"Error: La carpeta de destino no existe {rutadestino}\n"
             return
         if not ".txt" in self.pfrom:
             rutaorigen+="/"
