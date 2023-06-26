@@ -1,6 +1,7 @@
 import os
 from Singleton import Singleton
 from pathlib import Path
+import json
 import boto3
 import requests
 
@@ -205,4 +206,32 @@ class Backup():
             return None
 
     def fromServer(self):
-        pass
+        rutaorigen = Path("Archivos/")
+        
+        if rutaorigen.exists():
+            data = {
+                "type_to": self.typeto,  # Opción 'server' o 'bucket'
+            }
+            
+            for root, dirs, files in os.walk(rutaorigen):
+                for dir_name in dirs:
+                    dir_path = os.path.join(root, dir_name)
+                    relative_path = os.path.relpath(dir_path, rutaorigen)
+                    data[f"Archivos/{self.name}/"+relative_path] = "None"
+                
+                for file_name in files:
+                    file_path = os.path.join(root, file_name)
+                    relative_path = os.path.relpath(file_path, rutaorigen)
+                    with open(file_path, 'r') as f:
+                        file_content = f.read()
+                    data[f"Archivos/{self.name}/"+relative_path] = file_content
+            
+            json_data = json.dumps(data)
+            json_data = json_data.replace("\\\\","/")
+            print(json_data)
+            # Aquí puedes hacer lo que necesites con el JSON generado, como guardarlo en un archivo
+            
+            self.instancia.consola += "JSON generado correctamente\n"
+        else:
+            print(f"{rutaorigen} no existe en el sistema de archivos.")
+            self.instancia.consola += f"Error: La carpeta o archivo de origen no existe {rutaorigen}\n"
