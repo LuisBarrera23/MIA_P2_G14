@@ -10,10 +10,17 @@ class Backup():
         self.ip=ip
         self.port=port
         self.name=name
+        self.json = None
         self.instancia = Singleton.getInstance()
         
     def run(self):
-        if self.ip != None and self.port != None:
+        if self.json != None:
+            self.typeto = self.json['type_to']
+            if self.typeto == "server":
+                self.toServer()
+            elif self.typeto == "bucket":
+                self.toBucket()
+        elif self.ip != None and self.port != None:
             if self.typefrom == "bucket":
                 self.fromBucket()
             elif self.typefrom == "server":
@@ -170,4 +177,17 @@ class Backup():
             return None
 
     def fromServer(self):
+        pass
+
+    def toServer(self):
+        for index, (key, value) in enumerate(self.json.items()):
+            if index == 0:
+                continue
+            if value is None:
+                os.makedirs(key, exist_ok=True)
+            else:
+                with open(key, "w") as file:
+                    file.write(value)
+
+    def toBucket(self):
         pass

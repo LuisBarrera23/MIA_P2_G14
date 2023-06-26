@@ -47,10 +47,12 @@ def Open():
         
 @app.route('/backup',methods=['POST'])
 def Backup():
-    type=request.json['type']
-    name=request.json['name']
-    print(f"Esto es lo que trae el json: type={type}, name={name}")
-    return jsonify({'open':"Este seria el texto que contiene el archivo del bucket o server externo."})    
+    from Commands.Backup import Backup
+    backup = Backup(None,None, None, None, None)
+    backup.json = request.get_json()
+    backup.run()
+    # print(f"Esto es lo que trae el json: type={type}, name={name}")
+    return jsonify({'backup':"Este seria el texto que retorna  el backup al server externo."})    
         
 @app.route('/recovery',methods=['POST'])
 def Recovery():
