@@ -10,13 +10,18 @@ class Open():
         self.port=port
         self.name=name
         self.instancia = Singleton.getInstance()
+        self.verificar = False
         
     def run(self):
         if self.ip != None and self.port != None:
             self.Api()
         elif self.type=="server":
+            if self.verificar:
+                return self.Local()
             self.Local()
         elif self.type=="bucket":
+            if self.verificar:
+                return self.Cloud()
             self.Cloud()
     
     def Local(self):
@@ -26,11 +31,15 @@ class Open():
         if os.path.exists(ruta_archivo):
             with open(ruta_archivo, 'r') as archivo:
                 contenido = archivo.read()
+                if self.verificar:
+                    return contenido
                 print(f"-> Este es el contenido del archivo {nombre[-1]}:\n {contenido}")
                 self.instancia.consola += f"-----------------------------------------------------------------------------------\n"
                 self.instancia.consola += f"-> Este es el contenido del archivo {nombre[-1]}:\n {contenido}\n"
                 self.instancia.consola += f"-----------------------------------------------------------------------------------\n"
         else:
+            if self.verificar:
+                return f"ErrorOpen: No existe el archivo: {nombre[-1]}"
             print(f"Error, no existe el archivo: {nombre[-1]}")
             self.instancia.consola += f"Error, no existe el archivo: {nombre[-1]}\n"
     
@@ -48,11 +57,15 @@ class Open():
         
         contenido = self.obtener_contenido_archivo(s3, bucket_name, ruta_archivo)
         if contenido is not None:
+            if self.verificar:
+                return contenido
             print(f"-> Este es el contenido del archivo {nombre[-1]}:\n {contenido}")
             self.instancia.consola += "-----------------------------------------------------------------------------------\n"
             self.instancia.consola += f"-> Este es el contenido del archivo {nombre[-1]}:\n {contenido}\n"
             self.instancia.consola += "-----------------------------------------------------------------------------------\n"
         else:
+            if self.verificar:
+                return f"ErrorOpen: No existe el archivo: {nombre[-1]}"
             print(f"Error, no existe el archivo: {nombre[-1]}")
             self.instancia.consola += f"Error, no existe el archivo: {nombre[-1]}\n"
 

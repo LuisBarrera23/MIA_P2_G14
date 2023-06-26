@@ -34,7 +34,30 @@ def analizar():
     analizador.analyze()
     return jsonify({'salida':instancia.consola})
         
-    
+@app.route('/open',methods=['POST'])
+def Open():
+    from Commands.Open import Open
+    type=request.json['type']
+    name=request.json['name']
+    print(f"Esto es lo que trae el json: type={type}, name={name}")
+    abrir = Open(type, None, None, name)
+    abrir.verificar = True
+    contenido = abrir.run()
+    return jsonify({'open':contenido})    
+        
+@app.route('/backup',methods=['POST'])
+def Backup():
+    type=request.json['type']
+    name=request.json['name']
+    print(f"Esto es lo que trae el json: type={type}, name={name}")
+    return jsonify({'open':"Este seria el texto que contiene el archivo del bucket o server externo."})    
+        
+@app.route('/recovery',methods=['POST'])
+def Recovery():
+    type=request.json['type']
+    name=request.json['name']
+    print(f"Esto es lo que trae el json: type={type}, name={name}")
+    return jsonify({'open':"Este seria el texto que contiene el archivo del bucket o server externo."})    
 
 if __name__=="__main__":
     app.run(host="0.0.0.0",port=8080,debug=True)
