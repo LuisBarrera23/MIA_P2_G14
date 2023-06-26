@@ -17,5 +17,10 @@ def Open():
     print(f"Esto es lo que trae el json: type={type}, name={name}")
     return jsonify({'open':"Este seria el texto que contiene el archivo del bucket o server externo."})
 
+@app.route('/backup',methods=['POST'])
+def Backup():
+    print(request.get_json())
+    return jsonify({'backup':"El backup se ha realizado correctamente."})
+
 if __name__=="__main__":
     app.run(host="0.0.0.0",port=5000,debug=True)
