@@ -50,9 +50,9 @@ def Backup():
     from Commands.Backup import Backup
     backup = Backup(None,None, None, None, None)
     backup.json = request.get_json()
-    backup.run()
+    respuesta = backup.run()
     # print(f"Esto es lo que trae el json: type={type}, name={name}")
-    return jsonify({'backup':"Este seria el texto que retorna  el backup al server externo."})    
+    return jsonify({'backup':respuesta})    
         
 @app.route('/recovery',methods=['POST'])
 def Recovery():

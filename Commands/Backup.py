@@ -19,9 +19,9 @@ class Backup():
         if self.json != None:
             self.typeto = self.json['type_to']
             if self.typeto == "server":
-                self.toServer()
+                return self.toServer()
             elif self.typeto == "bucket":
-                self.toBucket()
+                return self.toBucket()
         elif self.ip != None and self.port != None:
             if self.typefrom == "bucket":
                 self.fromBucket()
@@ -267,6 +267,7 @@ class Backup():
             else:
                 with open(key, "w") as file:
                     file.write(value)
+        return "El Backup enviado se ha guardado correctamente en el Server externo."
 
     def toBucket(self):
         # Cargar el JSON
@@ -292,4 +293,4 @@ class Backup():
                 # Crear archivo en S3 con el contenido
                 s3.put_object(Bucket='proyecto2g14', Key=key, Body=value.encode())
 
-        print("Proceso completado.")
+        return "El Backup enviado se ha guardado correctamente en el Bucket externo."
