@@ -3,7 +3,6 @@ import shutil
 from pathlib import Path
 import boto3
 from Singleton import Singleton
-import boto3
 
 class Copy():
     def __init__(self, pfrom, pto , typeto, typefrom) -> None:

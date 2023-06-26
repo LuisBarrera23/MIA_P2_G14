@@ -1,5 +1,7 @@
 import os
 from Singleton import Singleton
+from pathlib import Path
+import json
 import boto3
 import requests
 
@@ -31,7 +33,41 @@ class Backup():
             self.Cloud()
     
     def Local(self):
-        pass
+        rutaorigen=Path("Archivos/")
+        rutadestino="Archivos/"+self.name+"/"
+        if rutaorigen.exists():
+            session = boto3.Session(
+                aws_access_key_id=self.instancia.accesskey,
+                aws_secret_access_key=self.instancia.secretaccesskey,
+            )
+            s3 = session.client('s3')
+            
+            for root, dirs, files in os.walk(rutaorigen, topdown=False):
+                for file_name in files:
+                    local_file_path = os.path.join(root, file_name)
+                    relative_path = os.path.relpath(local_file_path, rutaorigen)
+                    s3_file_path = os.path.join(rutadestino, relative_path).replace("\\", "/")
+                    s3_file_path = s3_file_path.lstrip("/")
+                    s3_file_path = os.path.dirname(s3_file_path)
+                    s3.upload_file(local_file_path, 'proyecto2g14', s3_file_path + "/" + file_name)
+
+            for root, dirs, _ in os.walk(rutaorigen):
+                for dir_name in dirs:
+                    dir_path = os.path.join(root, dir_name)
+                    relative_path = os.path.relpath(dir_path, rutaorigen)
+                    s3_dir_path = os.path.join(rutadestino, relative_path).replace("\\", "/")
+                    s3_dir_path = s3_dir_path.lstrip("/")
+                    
+                    try:
+                        s3.head_object(Bucket='proyecto2g14', Key=s3_dir_path + "/")
+                    except:
+                        s3.put_object(Body="", Bucket='proyecto2g14', Key=s3_dir_path + "/")
+
+
+            self.instancia.consola += f"Contenido de la carpeta copiado exitosamente a '{rutadestino}' del bucket\n"
+        else:
+            print(f"{rutaorigen} no existe en el sistema de archivos.")
+            self.instancia.consola += f"Error: La carpeta o archivo de origen no existe {rutaorigen}\n"
     
     def Cloud(self):
         session = boto3.Session(
@@ -177,7 +213,35 @@ class Backup():
             return None
 
     def fromServer(self):
-        pass
+        rutaorigen = Path("Archivos/")
+        
+        if rutaorigen.exists():
+            data = {
+                "type_to": self.typeto,  # Opción 'server' o 'bucket'
+            }
+            
+            for root, dirs, files in os.walk(rutaorigen):
+                for dir_name in dirs:
+                    dir_path = os.path.join(root, dir_name)
+                    relative_path = os.path.relpath(dir_path, rutaorigen)
+                    data[f"Archivos/{self.name}/"+relative_path] = "None"
+                
+                for file_name in files:
+                    file_path = os.path.join(root, file_name)
+                    relative_path = os.path.relpath(file_path, rutaorigen)
+                    with open(file_path, 'r') as f:
+                        file_content = f.read()
+                    data[f"Archivos/{self.name}/"+relative_path] = file_content
+            
+            json_data = json.dumps(data)
+            json_data = json_data.replace("\\\\","/")
+            print(json_data)
+            # Aquí puedes hacer lo que necesites con el JSON generado, como guardarlo en un archivo
+            
+            self.instancia.consola += "JSON generado correctamente\n"
+        else:
+            print(f"{rutaorigen} no existe en el sistema de archivos.")
+            self.instancia.consola += f"Error: La carpeta o archivo de origen no existe {rutaorigen}\n"
 
     def toServer(self):
         for index, (key, value) in enumerate(self.json.items()):
