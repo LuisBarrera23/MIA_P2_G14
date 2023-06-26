@@ -1,5 +1,6 @@
 import os
 import shutil
+from pathlib import Path
 from Singleton import Singleton
 import boto3
 
@@ -106,6 +107,61 @@ class Transfer():
         self.instancia.consola += "Transferencia completada.\n"
     
     def Server_bucket(self):
+        rutaorigen=Path("Archivos/"+self.pfrom)
+        rutadestino="Archivos/"+self.pto
+        if rutaorigen.exists():
+            session = boto3.Session(
+                aws_access_key_id=self.instancia.accesskey,
+                aws_secret_access_key=self.instancia.secretaccesskey,
+            )
+            s3 = session.client('s3')
+            if rutaorigen.is_file():
+                if not self.file_or_folder_exists(s3,rutadestino):
+                    self.instancia.consola += f"Error: La carpeta de destino no existe {rutadestino}\n"
+                    return
+                nombreArchivo=rutaorigen.name
+                with open(rutaorigen, 'rb') as archivo:
+                    nombreVerificado=nombreArchivo
+                    nombreArchivo, extension = os.path.splitext(os.path.basename(rutaorigen))
+                    i=1
+                    while self.file_or_folder_exists(s3,rutadestino+"/"+nombreVerificado):
+                        nombreVerificado = nombreArchivo+f"_{i}.{extension}"
+                        i+=1
+
+                    s3.upload_fileobj(archivo, 'proyecto2g14', rutadestino+"/"+nombreVerificado)
+                    archivo.close()
+                    os.remove(rutaorigen)
+                    self.instancia.consola += f"Archivo transferido exitosamente a '{rutadestino}' del bucket\n"
+            elif rutaorigen.is_dir():
+                # print(f"es una carpeta.")
+                # if not self.file_or_folder_exists(s3,rutadestino):
+                #     self.instancia.consola += f"Error: La carpeta de destino no existe {rutadestino}\n"
+                #     return
+                
+                i=0
+                for root, dirs, files in os.walk(rutaorigen):
+                    for file_name in files:
+                        # print(file_name)
+                        local_file_path = os.path.join(root, file_name)
+                        relative_path = os.path.relpath(local_file_path, rutaorigen)
+                        s3_file_path = os.path.join(rutadestino, relative_path).replace("\\", "/")
+                        s3_file_path = s3_file_path.lstrip("/")
+                        s3_file_path = os.path.dirname(s3_file_path)
+                        nombreArchivo, extension = os.path.splitext(file_name)
+                        nombreVerificado = nombreArchivo + extension
+                        i = 1
+                        while self.file_or_folder_exists(s3, s3_file_path + "/" + nombreVerificado):
+                            nombreVerificado = f"{nombreArchivo}_{i}{extension}"
+                            i += 1
+                        s3.upload_file(local_file_path, 'proyecto2g14', s3_file_path + "/" + nombreVerificado)
+                        os.remove(local_file_path)
+                
+                shutil.rmtree(rutaorigen)
+                os.mkdir(rutaorigen)
+                self.instancia.consola += f"Contenido de la carpeta transferido exitosamente a '{rutadestino}' del bucket\n"
+        else:
+            print(f"{rutaorigen} no existe en el sistema de archivos.")
+            self.instancia.consola += f"Error: La carpeta o archivo de origen no existe {rutaorigen}\n"
         pass
     
     def Bucket_server(self):
@@ -245,5 +301,63 @@ class Transfer():
                 print("La carpeta ya está vacía.")
                 self.instancia.consola+="La carpeta ya está vacía.\n"
     
-    def Cloud(self):
-        pass
+    def Cloud(self):#funcion para bucket bucket
+        # Establecer conexión con AWS S3
+        session = boto3.Session(
+            aws_access_key_id=self.instancia.accesskey,
+            aws_secret_access_key=self.instancia.secretaccesskey,
+        )
+        s3 = session.client('s3')
+        rutaorigen="Archivos/"+self.pfrom
+        rutadestino="Archivos/"+self.pto+"/"
+        if not self.file_or_folder_exists(s3,rutaorigen):
+            self.instancia.consola += f"Error: La carpeta o archivo de origen no existe {rutaorigen}\n"
+            return
+        if not ".txt" in self.pfrom:
+            rutaorigen+="/"
+            # Obtener una lista de todos los objetos en la carpeta de origen
+            result = s3.list_objects(Bucket='proyecto2g14', Prefix=rutaorigen)
+
+            # Copiar cada objeto de la carpeta de origen a la carpeta de destino
+            for content in result.get("Contents", []):
+                file_key = content.get("Key")
+                archivoFuente = {
+                    "Bucket": 'proyecto2g14',
+                    "Key": file_key
+                }
+                RutaDestino = file_key.replace(rutaorigen, rutadestino)
+                if ".txt" in RutaDestino:
+                    nombre_archivo,extension = os.path.splitext(os.path.basename(RutaDestino))
+                    ruta = os.path.dirname(RutaDestino)+"/"
+                    i=1
+                    while self.file_or_folder_exists(s3,RutaDestino):
+                        RutaDestino = ruta + nombre_archivo+f"_{i}{extension}"
+                        i+=1
+                s3.copy(archivoFuente, 'proyecto2g14', RutaDestino)
+            objects_to_delete = []
+            result = s3.list_objects_v2(Bucket='proyecto2g14', Prefix=rutaorigen)
+            for obj in result.get('Contents', []):
+                if obj['Key'] != rutaorigen:
+                    objects_to_delete.append({'Key': obj['Key']})
+
+            if objects_to_delete:
+                s3.delete_objects(Bucket='proyecto2g14', Delete={'Objects': objects_to_delete})
+
+            self.instancia.consola += f"La carpeta '{rutaorigen}' se ha transferido correctamente.\n"
+        else:
+            # Código para cuando es un archivo.txt
+            nombre_archivo,extension = os.path.splitext(os.path.basename(rutaorigen))  # Obtener el nombre del archivo de la ruta de origen
+            RutaDestino = rutadestino + nombre_archivo+extension
+            
+            i=1
+            while self.file_or_folder_exists(s3,RutaDestino):
+                RutaDestino = rutadestino + nombre_archivo+f"_{i}{extension}"
+                i+=1
+            archivoFuente = {"Bucket": 'proyecto2g14',"Key": rutaorigen}
+            s3.copy_object(CopySource=archivoFuente,Bucket='proyecto2g14',Key=RutaDestino)
+            s3.delete_object(Bucket='proyecto2g14', Key=rutaorigen)
+            self.instancia.consola += f"El Archivo '{rutaorigen}' se ha transferido correctamente.\n"
+
+    def file_or_folder_exists(self, s3, path):
+        response = s3.list_objects_v2(Bucket='proyecto2g14', Prefix=path)
+        return 'Contents' in response

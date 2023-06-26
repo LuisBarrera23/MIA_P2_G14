@@ -282,7 +282,54 @@ class Copy():
             self.instancia.consola += f"La carpeta '{ruta_directorio}' se ha copiado correctamente.\n"
 
     def Cloud(self):#funcion para bucket bucket
-        pass
+        # Establecer conexión con AWS S3
+        session = boto3.Session(
+            aws_access_key_id=self.instancia.accesskey,
+            aws_secret_access_key=self.instancia.secretaccesskey,
+        )
+        s3 = session.client('s3')
+        rutaorigen="Archivos/"+self.pfrom
+        rutadestino="Archivos/"+self.pto+"/"
+        if not self.file_or_folder_exists(s3,rutaorigen):
+            self.instancia.consola += f"Error: La carpeta o archivo de origen no existe {rutaorigen}\n"
+            return
+        if not self.file_or_folder_exists(s3,rutadestino):
+            self.instancia.consola += f"Error: La carpeta de destino no existe {rutadestino}\n"
+            return
+        if not ".txt" in self.pfrom:
+            rutaorigen+="/"
+            # Obtener una lista de todos los objetos en la carpeta de origen
+            result = s3.list_objects(Bucket='proyecto2g14', Prefix=rutaorigen)
+
+            # Copiar cada objeto de la carpeta de origen a la carpeta de destino
+            for content in result.get("Contents", []):
+                file_key = content.get("Key")
+                archivoFuente = {
+                    "Bucket": 'proyecto2g14',
+                    "Key": file_key
+                }
+                RutaDestino = file_key.replace(rutaorigen, rutadestino)
+                if ".txt" in RutaDestino:
+                    nombre_archivo,extension = os.path.splitext(os.path.basename(RutaDestino))
+                    ruta = os.path.dirname(RutaDestino)+"/"
+                    i=1
+                    while self.file_or_folder_exists(s3,RutaDestino):
+                        RutaDestino = ruta + nombre_archivo+f"_{i}{extension}"
+                        i+=1
+                s3.copy(archivoFuente, 'proyecto2g14', RutaDestino)
+            self.instancia.consola += f"La carpeta '{rutaorigen}' se ha copiado correctamente.\n"
+        else:
+            # Código para cuando es un archivo.txt
+            nombre_archivo,extension = os.path.splitext(os.path.basename(rutaorigen))  # Obtener el nombre del archivo de la ruta de origen
+            RutaDestino = rutadestino + nombre_archivo+extension
+            
+            i=1
+            while self.file_or_folder_exists(s3,RutaDestino):
+                RutaDestino = rutadestino + nombre_archivo+f"_{i}{extension}"
+                i+=1
+            archivoFuente = {"Bucket": 'proyecto2g14',"Key": rutaorigen}
+            s3.copy_object(CopySource=archivoFuente,Bucket='proyecto2g14',Key=RutaDestino)
+            self.instancia.consola += f"El Archivo '{rutaorigen}' se ha copiado correctamente.\n"
 
 
     def file_or_folder_exists(self, s3, path):
