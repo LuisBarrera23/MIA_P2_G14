@@ -185,10 +185,14 @@ class Backup():
             ruta_destino_objeto = os.path.join(ruta_destino, ruta_relativa)
 
             if objeto.key[-1] == '/':  # Es un directorio
+                ruta_destino_objeto = ruta_destino_objeto.replace('\\\\', '/')
+                ruta_destino_objeto = ruta_destino_objeto.replace('\\', '/')
                 data[ruta_destino_objeto] = 'None'
             else:  # Es un archivo
                 contenido = self.obtener_contenido_archivo(s3, bucket_name, ruta_objeto)
                 if contenido is not None:
+                    ruta_destino_objeto = ruta_destino_objeto.replace('\\\\', '/')
+                    ruta_destino_objeto = ruta_destino_objeto.replace('\\', '/')
                     data[ruta_destino_objeto] = contenido
                 else:
                     continue
@@ -247,7 +251,8 @@ class Backup():
         for index, (key, value) in enumerate(self.json.items()):
             if index == 0:
                 continue
-            if value is None:
+            # print(f'{key} - {value} - {type(value)}')
+            if value == 'None':
                 os.makedirs(key, exist_ok=True)
             else:
                 with open(key, "w") as file:
