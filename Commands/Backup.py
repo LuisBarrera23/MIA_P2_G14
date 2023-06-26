@@ -213,6 +213,9 @@ class Backup():
             return None
 
     def fromServer(self):
+        url = f'http://{self.ip}:{self.port}/backup'
+        headers = {'Content-Type': 'application/json'}  # Especificamos el tipo de contenido del cuerpo
+        
         rutaorigen = Path("Archivos/")
         
         if rutaorigen.exists():
@@ -236,9 +239,16 @@ class Backup():
             json_data = json.dumps(data)
             json_data = json_data.replace("\\\\","/")
             print(json_data)
+            response = requests.post(url, json=json_data, headers=headers)
             # Aquí puedes hacer lo que necesites con el JSON generado, como guardarlo en un archivo
-            
-            self.instancia.consola += "JSON generado correctamente\n"
+            if response.status_code == 200:
+                data = response.json()
+                res = data['backup']
+                print(res)
+                self.instancia.consola += f"{res}"
+            else:
+                print(f'Error en la comunicación con el backend con ip: {self.ip} y port: {self.port}.')
+                self.instancia.consola += f'Error en la comunicación con el backend con ip: {self.ip} y port: {self.port}.\n'
         else:
             print(f"{rutaorigen} no existe en el sistema de archivos.")
             self.instancia.consola += f"Error: La carpeta o archivo de origen no existe {rutaorigen}\n"
@@ -254,4 +264,27 @@ class Backup():
                     file.write(value)
 
     def toBucket(self):
-        pass
+        # Cargar el JSON
+        data = self.json
+
+        # Eliminar la clave "type_to" si existe
+        if "type_to" in data:
+            del data["type_to"]
+
+        # Crear las carpetas y archivos en S3
+        session = boto3.Session(
+            aws_access_key_id=self.instancia.accesskey,
+            aws_secret_access_key=self.instancia.secretaccesskey,
+        )
+        s3 = session.client('s3')
+
+        for key, value in data.items():
+            if value == "None":
+                # Crear carpeta en S3
+                if "." != key[-1]:
+                    s3.put_object(Bucket='proyecto2g14', Key=key + "/")
+            else:
+                # Crear archivo en S3 con el contenido
+                s3.put_object(Bucket='proyecto2g14', Key=key, Body=value.encode())
+
+        print("Proceso completado.")
