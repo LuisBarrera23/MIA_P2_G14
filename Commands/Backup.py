@@ -64,7 +64,7 @@ class Backup():
                         s3.put_object(Body="", Bucket='proyecto2g14', Key=s3_dir_path + "/")
 
 
-            self.instancia.consola += f"Contenido de la carpeta copiado exitosamente a '{rutadestino}' del bucket\n"
+            self.instancia.consola += f"Backup realizado exitosamente en la carpeta: '{rutadestino}' del bucket\n"
         else:
             print(f"{rutaorigen} no existe en el sistema de archivos.")
             self.instancia.consola += f"Error: La carpeta o archivo de origen no existe {rutaorigen}\n"
