@@ -22,5 +22,10 @@ def Backup():
     print(request.get_json())
     return jsonify({'backup':"El backup se ha realizado correctamente."})
 
+@app.route('/recovery',methods=['POST'])
+def Recovery():
+    print(request.get_json())
+    return jsonify({'recovery':'{"Archivos/carpeta 2": "None", "Archivos/carpeta1": "None", "Archivos/carpeta3": "None", "Archivos/carpeta 2/prueba 1": "None", "Archivos/carpeta 2/prueba 1/pureba": "None", "Archivos/carpeta 2/prueba 1/prueba2.txt": "Este es el contenido del archivo de la carpeta 2", "Archivos/carpeta 2/prueba 1/pureba/otra": "None", "Archivos/carpeta 2/prueba 1/pureba/otra/prueba 3.txt": "Este es el contenido del archivo del archivo 3", "Archivos/carpeta1/prueba": "None", "Archivos/carpeta1/prueba4.txt": "File4", "Archivos/carpeta1/prueba/prueba1.txt": "File1"}'})
+
 if __name__=="__main__":
     app.run(host="0.0.0.0",port=5000,debug=True)
