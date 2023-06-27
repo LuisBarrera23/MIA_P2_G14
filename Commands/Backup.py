@@ -269,6 +269,9 @@ class Backup():
             if value == 'None':
                 os.makedirs(key, exist_ok=True)
             else:
+                ruta = os.path.split(key)
+                if not os.path.exists(ruta):
+                    os.makedirs(ruta)
                 with open(key, "w") as file:
                     file.write(value)
         return "El Backup enviado se ha guardado correctamente en el Server externo."
