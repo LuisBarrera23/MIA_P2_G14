@@ -17,7 +17,8 @@ class Backup():
         
     def run(self):
         if self.json != None:
-            self.typeto = self.json['type_to']
+            data = json.loads(self.json)
+            self.typeto = data['type_to']
             if self.typeto == "server":
                 return self.toServer()
             elif self.typeto == "bucket":
