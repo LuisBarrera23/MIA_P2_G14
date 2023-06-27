@@ -197,7 +197,9 @@ class Backup():
                 else:
                     continue
 
-        response = requests.post(url, json=data, headers=headers)
+        json_data = json.dumps(data)
+        json_data = json_data.replace("\\\\","/")
+        response = requests.post(url, json=json_data, headers=headers)
         
         if response.status_code == 200:
             data = response.json()
@@ -258,7 +260,8 @@ class Backup():
             self.instancia.consola += f"Error: La carpeta o archivo de origen no existe {rutaorigen}\n"
 
     def toServer(self):
-        for index, (key, value) in enumerate(self.json.items()):
+        data = json.loads(self.json)
+        for index, (key, value) in enumerate(data.items()):
             if index == 0:
                 continue
             # print(f'{key} - {value} - {type(value)}')
@@ -271,7 +274,7 @@ class Backup():
 
     def toBucket(self):
         # Cargar el JSON
-        data = self.json
+        data = json.loads(self.json)
 
         # Eliminar la clave "type_to" si existe
         if "type_to" in data:
