@@ -269,7 +269,7 @@ class Backup():
             if value == 'None':
                 os.makedirs(key, exist_ok=True)
             else:
-                ruta = os.path.split(key)
+                ruta, archivo = os.path.split(key)
                 if not os.path.exists(ruta):
                     os.makedirs(ruta)
                 with open(key, "w") as file:
