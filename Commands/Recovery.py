@@ -237,9 +237,9 @@ class Recovery():
         
         if response.status_code == 200:
             data = response.json()
-            data = json.loads(data)
-            print(data)
             res = data['recovery']
+            res = json.loads(res)
+            # print(data)
             for (key, value) in res.items():
                 if value == 'None':
                     os.makedirs(key, exist_ok=True)
@@ -261,10 +261,10 @@ class Recovery():
         # Aquí puedes hacer lo que necesites con el JSON generado, como guardarlo en un archivo
         if response.status_code == 200:
             respuesta = response.json()
-            respuesta = json.loads(respuesta)
             data = json.loads(respuesta['recovery'])
+            # respuesta = json.loads(data)
             # data = respuesta['recovery']
-            print(data)
+            # print(data)
         else:
             print(f'Error en la comunicación con el backend con ip: {self.ip} y port: {self.port}.')
             self.instancia.consola += f'Error en la comunicación con el backend con ip: {self.ip} y port: {self.port}.\n'
