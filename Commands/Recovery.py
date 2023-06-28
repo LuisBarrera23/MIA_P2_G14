@@ -151,6 +151,9 @@ class Recovery():
                 for file_name in files:
                     file_path = os.path.join(root, file_name)
                     relative_path = os.path.relpath(file_path, rutaorigen)
+                    ruta, archivo = os.path.split(file_path)
+                    if not os.path.exists(ruta):
+                        os.makedirs(ruta)
                     with open(file_path, 'r') as f:
                         file_content = f.read()
                     data[f"Archivos/"+relative_path] = file_content
@@ -244,6 +247,9 @@ class Recovery():
                 if value == 'None':
                     os.makedirs(key, exist_ok=True)
                 else:
+                    ruta, archivo = os.path.split(key)
+                    if not os.path.exists(ruta):
+                        os.makedirs(ruta)
                     with open(key, "w") as file:
                         file.write(value)
             self.instancia.consola += "El recovery del server externo se ha generado correctamente."
