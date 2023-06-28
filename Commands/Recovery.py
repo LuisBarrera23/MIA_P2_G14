@@ -292,6 +292,6 @@ class Recovery():
                 # Crear archivo en S3 con el contenido
                 s3.put_object(Bucket='proyecto2g14', Key=key, Body=value.encode())
 
-        return "El Backup enviado se ha guardado correctamente en el Bucket externo."
+        self.instancia.consola += "El recovery del server externo se ha generado correctamente."
 
         
