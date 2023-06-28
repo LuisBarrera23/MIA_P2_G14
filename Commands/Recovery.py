@@ -212,7 +212,9 @@ class Recovery():
                 else:
                     continue
 
-        return data
+        json_data = json.dumps(data)
+        json_data = json_data.replace("\\\\","/")
+        return json_data
     
     def obtener_contenido_archivo(self, s3, bucket_name, ruta_archivo):
         try:
@@ -235,6 +237,7 @@ class Recovery():
         
         if response.status_code == 200:
             data = response.json()
+            data = json.loads(data)
             print(data)
             res = data['recovery']
             for (key, value) in res.items():
@@ -258,6 +261,7 @@ class Recovery():
         # Aquí puedes hacer lo que necesites con el JSON generado, como guardarlo en un archivo
         if response.status_code == 200:
             respuesta = response.json()
+            respuesta = json.loads(respuesta)
             data = json.loads(respuesta['recovery'])
             # data = respuesta['recovery']
             print(data)
